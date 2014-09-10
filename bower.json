@@ -1,0 +1,22 @@
+{
+  "name": "apis",
+  "main": "index.js",
+  "version": "0.0.0",
+  "description": "Projecto de prueba de apis",
+  "keywords": [
+    "pruebas",
+    "apis"
+  ],
+  "authors": [
+    "rohatiro"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
