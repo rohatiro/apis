@@ -1,3 +1,4 @@
 node_modules/
+app/client/assets/bcomponents/
 *.sublime-project
 *.sublime-workspace
