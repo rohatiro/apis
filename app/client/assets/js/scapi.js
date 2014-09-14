@@ -8,6 +8,8 @@ SoundCloudAPI = function() {
 	var self = this;
 	var render = {};
 
+	render.tracksTmpl = "{% for track in tracks %}<article class='track'><figure><a href='#'><img src='{{ track.artwork_url }}' /></a></figure><div class='controls-container'><button class='play' onclick='scapi.Tracks.play(event, {{ track.id }})'>Play</button></div></article>{% endfor %}";
+	
 	render.isLogin = function(me)
 	{
 		if(!me.errors)
@@ -21,11 +23,8 @@ SoundCloudAPI = function() {
 		}
 	};
 
-	render.tracksTmpl = "{% for track in tracks %}<article class='track'><figure><a href='#'><img src='{{ track.artwork_url }}' /></a></figure><div class='controls-container'><button class='play' onclick='scapi.Tracks.play(event, {{ track.id }})'>Play</button></div></article>{% endfor %}";
-
 	render.getFavTracks = function(tracks)
 	{
-		console.log(tracks);
 		self.Tracks = new _Tracks();
 		self.Tracks.add(tracks);
 		var html = self.Tracks.render();
@@ -53,7 +52,7 @@ SoundCloudAPI = function() {
 
 		_self.attributes = attributes;
 
-		_self.getStreamTrackPlay = function() {
+		_self.getStreamTrack = function() {
 			var url = _self.toJSON().stream_url;
 			var __self = _self;
 			
@@ -61,16 +60,17 @@ SoundCloudAPI = function() {
 			{
 				__self.hasSound = true;
 				__self.sound = sound;
-				__self.sound.play();
 			};
 
-			return SC.stream(url,setStream);
+			SC.stream(url,setStream);
 		};
 
 		_self.toJSON = function()
 		{
 			return _self.attributes;
 		};
+
+		_self.getStreamTrack();
 
 		return _self;
 	};
@@ -116,14 +116,9 @@ SoundCloudAPI = function() {
 		_self.play = function(e, id) {
 			var model = _self.getById(id);
 			var target = e.target;
-			$(target).toggleClass('play').toggleClass('pause');
-			if(!model.hasSound)
+			if(model.hasSound)
 			{
-				model.getStreamTrackPlay();
-				$(target).html('Pause');
-			}
-			else
-			{
+				$(target).toggleClass('play').toggleClass('pause');
 				if($(target).attr('class') == 'play')
 				{
 					$(target).html('Play');
@@ -131,6 +126,7 @@ SoundCloudAPI = function() {
 				}
 				else
 				{
+					soundManager.pauseAll();
 					$(target).html('Pause');
 					model.sound.play();
 				}
@@ -174,17 +170,3 @@ SoundCloudAPI = function() {
 scapi = new SoundCloudAPI();
 
 $(scapi.initialize);
-
-// SC.connect(function() {
-// 	SC.get("/me",function(me) {
-// 		console.log(me);
-// 		alert("Hola, " + me.username);
-// 	});
-// });
-// SC.get("/users/roberto-haziel-tienda-rodr-guez/favorites",function(tracks){
-// 	var i;
-// 	for(i = 0; i < tracks.length; i++)
-// 	{
-// 		SC.oEmbed(tracks[i].permalink_url,{},function(s){var track = $("<article>");track.html(s.html);$("#track").append(track)});
-// 	}
-// });
