@@ -1,9 +1,14 @@
-var home;
+var home,login;
+
+login = function(req,res) {
+	res.render("login");
+};
 
 home = function(req,res) {
 	res.render("index");
 };
 
 module.exports = {
-	home:home 
+	home:home,
+	login:login
 };

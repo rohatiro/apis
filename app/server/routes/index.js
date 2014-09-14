@@ -4,4 +4,5 @@ module.exports = function(server) {
 	site = require("./site");
 
 	server.get("/", site.home);
+	server.get("/login", site.login);
 };

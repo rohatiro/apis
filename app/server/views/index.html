@@ -4,23 +4,21 @@
 	<meta charset="UTF-8">
 	<title>Document</title>
 	<link rel="stylesheet" type="text/css" href="bcomponents/normalize-css/normalize.css" />
+	<link rel="stylesheet" type="text/css" href="css/sc.css" />
 	<script type="text/javascript" src="bcomponents/jquery/dist/jquery.min.js"></script>
 	<script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
-	<script type="text/javascript">
-	SC.initialize({
-		client_id:"[client ID]"
-	});
-	SC.get("/users/roberto-haziel-tienda-rodr-guez/favorites",function(tracks){
-		var i;
-		for(i = 0; i < tracks.length; i++)
-		{
-			SC.oEmbed(tracks[i].permalink_url,{},function(s){var track = $("<article>");track.html(s.html);$("#track").append(track)});
-		}
-	});
-	</script>
+	<script type="text/javascript" src="js/swig.min.js"></script>
+	<script type="text/javascript" src="js/scapi.js"></script>
 </head>
 <body>
-	<h1>Bienvenido</h1>
-	<section id="track"></section>
+	<header id="sc-header">
+		<div id="sc-headtitle">
+			<h1>SoundCloud API</h1>
+		</div>
+		<div id="sc-login"></div>
+	</header>
+	<section id="sc-contains">
+		<section id="tracks"></section>
+	</section>
 </body>
 </html>
