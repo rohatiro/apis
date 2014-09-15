@@ -7,8 +7,6 @@ SC.initialize({
 SoundCloudAPI = function() {
 	var self = this;
 	var render = {};
-
-	render.tracksTmpl = "{% for track in tracks %}<article class='track'><figure><a href='#'><img src='{{ track.artwork_url }}' /></a></figure><div class='controls-container'><button class='play' onclick='scapi.Tracks.play(event, {{ track.id }})'>Play</button></div></article>{% endfor %}";
 	
 	render.isLogin = function(me)
 	{
@@ -41,6 +39,7 @@ SoundCloudAPI = function() {
 		var _self = this;
 
 		_self.hasSound = false;
+		var tmpl = "<article class='track'><figure><a href='#'><img src='{{ track.artwork_url }}' /></a></figure><div class='controls-container'><button class='play' onclick='scapi.Tracks.play(event, {{ track.id }})'>Play</button></div></article>";
 
 		if(!attributes.artwork_url)
 		{
@@ -70,6 +69,11 @@ SoundCloudAPI = function() {
 			return _self.attributes;
 		};
 
+		var contdom = document.createElement("div");
+		contdom.innerHTML = swig.compile(tmpl)({track:_self.toJSON()});
+
+		_self.html = Array.prototype.slice.call(contdom.childNodes)[0];
+
 		_self.getStreamTrack();
 
 		return _self;
@@ -82,6 +86,8 @@ SoundCloudAPI = function() {
 		_self.model = _Track;
 
 		_self.models = [];
+
+		_self.currentSong = null;
 
 		_self.add = function(items)
 		{
@@ -113,23 +119,44 @@ SoundCloudAPI = function() {
 			return _json;
 		};
 
+		render.pauseAll = function() {
+			var i,pause;
+			for(i = 0; i < _self.models.length; i++)
+			{
+				pause = _self.models[i].html.getElementsByClassName("pause")[0];
+				if(pause)
+				{
+					pause.innerHTML = "Play";
+					pause.className = "play";
+				}
+			}
+		};
+
 		_self.play = function(e, id) {
 			var model = _self.getById(id);
 			var target = e.target;
-			if(model.hasSound)
+			if(!_self.currentSong)
 			{
 				$(target).toggleClass('play').toggleClass('pause');
-				if($(target).attr('class') == 'play')
-				{
-					$(target).html('Play');
-					model.sound.pause();
-				}
-				else
-				{
-					soundManager.pauseAll();
-					$(target).html('Pause');
-					model.sound.play();
-				}
+				$(target).html('Pause');
+				model.sound.play();
+				_self.currentSong = model;
+			}
+			else if (_self.currentSong.toJSON().id != model.toJSON().id)
+			{
+				render.pauseAll();
+				soundManager.pauseAll();
+				$(target).toggleClass('play').toggleClass('pause');
+				$(target).html('Pause');
+				model.sound.play();
+				_self.currentSong = model;	
+			}
+			else
+			{
+				$(target).toggleClass('play').toggleClass('pause');
+				$(target).html('Play');
+				model.sound.pause();
+				_self.currentSong = null;
 			}
 		};
 
@@ -144,9 +171,15 @@ SoundCloudAPI = function() {
 
 		_self.render = function()
 		{
-			var tmpl;
-			tmpl = swig.compile(render.tracksTmpl);
-			return tmpl({tracks:_self.toJSON()});
+			var tmpl = [],b;
+
+			for(b = 0; b < _self.models.length; b++)
+			{
+
+				tmpl.push(_self.models[b].html);
+			}
+			
+			return tmpl;
 		};
 
 		return _self;
