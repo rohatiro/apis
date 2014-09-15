@@ -1,6 +1,6 @@
 var SoundCloudAPI, scapi;
 SC.initialize({
-	client_id:"2603fac8ed0db8240db6d7bcc3b3fd8f",
+	client_id:"[client_id]",
 	redirect_uri:"http://localhost:8000/login"
 });
 
@@ -39,7 +39,7 @@ SoundCloudAPI = function() {
 		var _self = this;
 
 		_self.hasSound = false;
-		var tmpl = "<article class='track'><figure><a href='#'><img src='{{ track.artwork_url }}' /></a></figure><div class='controls-container'><button class='play' onclick='scapi.Tracks.play(event, {{ track.id }})'>Play</button></div></article>";
+		var tmpl = "<article class='track'><figure class='track-artwork-container'><a class='track-artwork-link' href='#'><img class='track-artwork-img' src='{{ track.artwork_url }}' /></a></figure><div class='track-controls-container'><a href='#' class='btn play' onclick='event.preventDefault();scapi.Tracks.play(event, {{ track.id }})'>Play</a href='#'></div></article>";
 
 		if(!attributes.artwork_url)
 		{
