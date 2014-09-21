@@ -1,6 +1,6 @@
 var SoundCloudAPI, scapi;
 SC.initialize({
-	client_id:"[client_id]",
+	client_id:"2603fac8ed0db8240db6d7bcc3b3fd8f",
 	redirect_uri:"http://localhost:8000/login"
 });
 
@@ -39,7 +39,7 @@ SoundCloudAPI = function() {
 		var _self = this;
 
 		_self.hasSound = false;
-		var tmpl = "<article class='track'><figure class='track-artwork-container'><a class='track-artwork-link' href='#'><img class='track-artwork-img' src='{{ track.artwork_url }}' /></a></figure><div class='track-controls-container'><a href='#' class='btn play' onclick='event.preventDefault();scapi.Tracks.play(event, {{ track.id }})'>Play</a href='#'></div></article>";
+		var tmpl = "<article class='track'><figure class='track-artwork-container'><a class='track-artwork-link' href='#'><img class='track-artwork-img' src='{{ track.artwork_url }}' /></a></figure><div class='track-controls-container'><div class='track-controls'><a href='#' class='btn play' onclick='event.preventDefault();scapi.Tracks.play(event, {{ track.id }})'>Play</a href='#'></div><div class='waveform'></div></div></article>";
 
 		if(!attributes.artwork_url)
 		{
@@ -61,7 +61,7 @@ SoundCloudAPI = function() {
 				__self.sound = sound;
 			};
 
-			SC.stream(url,setStream);
+			SC.stream(url,_self.waveform.optionsForSyncedStream(),setStream);
 		};
 
 		_self.toJSON = function()
@@ -73,6 +73,8 @@ SoundCloudAPI = function() {
 		contdom.innerHTML = swig.compile(tmpl)({track:_self.toJSON()});
 
 		_self.html = Array.prototype.slice.call(contdom.childNodes)[0];
+		_self.waveform = new Waveform({container:_self.html.getElementsByClassName("waveform")[0],innerColor:"#333",width:(document.getElementsByTagName("body")[0].clientWidth*.60),height:50,croppe:true});
+		_self.waveform.dataFromSoundCloudTrack(_self.toJSON());
 
 		_self.getStreamTrack();
 
@@ -127,7 +129,14 @@ SoundCloudAPI = function() {
 				if(pause)
 				{
 					pause.innerHTML = "Play";
-					pause.className = "play";
+					var cl = pause.classList;
+					var j;
+					for(j = 0; j < cl.length; j++)
+					{
+						if(cl[j] == "pause")
+							cl[j] = "play";
+					}
+					pause.className = cl.toString();
 				}
 			}
 		};
@@ -139,7 +148,15 @@ SoundCloudAPI = function() {
 			{
 				$(target).toggleClass('play').toggleClass('pause');
 				$(target).html('Pause');
-				model.sound.play();
+				if(model.sound.playState === 0)
+					model.sound.play({
+						onfinish:function(){
+							console.log('termino');
+							console.log(arguments);
+						}
+					});
+				else
+					model.sound.resume();
 				_self.currentSong = model;
 			}
 			else if (_self.currentSong.toJSON().id != model.toJSON().id)
@@ -148,7 +165,15 @@ SoundCloudAPI = function() {
 				soundManager.pauseAll();
 				$(target).toggleClass('play').toggleClass('pause');
 				$(target).html('Pause');
-				model.sound.play();
+				if(model.sound.playState === 0)
+					model.sound.play({
+						onfinish:function(){
+							console.log('termino');
+							console.log(arguments);
+						}
+					});
+				else
+					model.sound.resume();
 				_self.currentSong = model;	
 			}
 			else
