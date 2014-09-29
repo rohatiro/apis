@@ -5,4 +5,5 @@ module.exports = function(server) {
 
 	server.get("/", site.home);
 	server.get("/login", site.login);
+	server.get("/index", site.index);
 };

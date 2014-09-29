@@ -5,10 +5,15 @@ login = function(req,res) {
 };
 
 home = function(req,res) {
+	res.render("home");
+};
+
+index = function(req,res) {
 	res.render("index");
 };
 
 module.exports = {
 	home:home,
-	login:login
+	login:login,
+	index:index
 };
