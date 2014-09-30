@@ -1,30 +1,28 @@
 module.exports = function(server) {
-	var bodyparser,swig,path,express,routes;
+	var bodyparser,swig,express,routes,config,githubAPI,session,logger;
 
 	express = require("express");
+	session = require("express-session");
 	bodyparser = require("body-parser");
 	swig = require("swig");
-	path = require("path");
+	logger = require("morgan");
 	routes = require("./routes");
-
-	var rootdir,appdir,serverdir,clientdir,viewdir,assetsdir;
-
-	rootdir = path.resolve(__dirname,"./../../");
-	appdir = path.resolve(rootdir,"./app");
-	serverdir = path.resolve(appdir, "./server");
-	clientdir = path.resolve(appdir,"./client");
-	viewdir = path.resolve(serverdir,"./views");
-	assetsdir = path.resolve(clientdir,"./assets");
+	config = require("./config")();
+	githubAPI = require(config.apis)();
 
 	server.engine("html", swig.renderFile);
-	server.set("views",viewdir);
+	server.set("views",config.views);
 	server.set("view engine", "html");
 
-	server.use(express.static(assetsdir));
+	server.use(express.static(config.assets));
 	server.use(bodyparser.urlencoded({extended:true}));
 	server.use(bodyparser.json());
+	server.use(logger('combined'));
+	server.use(session({ secret: "keyboard cat"}));
+	server.use(githubAPI.initialize());
+	server.use(githubAPI.session());
 
-	routes(server);
+	routes(server,githubAPI);
 
 	server.listen(8000);
 };
