@@ -8,12 +8,17 @@ home = function(req,res) {
 	res.render("home");
 };
 
-index = function(req,res) {
-	res.render("index");
+soundcloud = function(req,res) {
+	res.render("soundcloud");
+};
+
+github = function(req,res) {
+	res.render("github");
 };
 
 module.exports = {
 	home:home,
 	login:login,
-	index:index
+	soundcloud:soundcloud,
+	github:github
 };
