@@ -3,6 +3,13 @@ module.exports = function(server,passport) {
 
 	site = require("./site");
 
+	var isLogged = function(req,res,next) {
+		if (req.isAuthenticated())
+			return next();
+		else
+			res.redirect("/auth/github");
+	};
+
 	passport.serializeUser(function(user,done) {
 		done(null,user);
 	});
@@ -17,8 +24,6 @@ module.exports = function(server,passport) {
 		failureRedirect:"/"
 	}));
 	server.get("/soundcloud", site.soundcloud);
-	server.get("/github",function(req,res,next){
-		return next();
-	}, site.github);
+	server.get("/github",isLogged, site.github);
 	server.get("/auth/github",passport.authenticate('github',{"scope":["user","repo"]}));
 };
