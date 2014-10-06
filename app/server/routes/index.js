@@ -19,10 +19,7 @@ module.exports = function(server,passport) {
 	})
 
 	server.get("/", site.home);
-	server.get("/login", passport.authenticate('github',{
-		successRedirect:"/github",
-		failureRedirect:"/"
-	}));
+	server.get("/login", passport.authenticate('github',{successRedirect:"/github",failureRedirect:"/"}));
 	server.get("/soundcloud", site.soundcloud);
 	server.get("/github",isLogged, site.github);
 	server.get("/auth/github",passport.authenticate('github',{"scope":["user","repo"]}));

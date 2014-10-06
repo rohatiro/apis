@@ -13,8 +13,7 @@ soundcloud = function(req,res) {
 };
 
 github = function(req,res) {
-	console.log(req.user);
-	res.render("github");
+	res.render("github",{user:req.user});
 };
 
 module.exports = {
