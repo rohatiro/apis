@@ -2,13 +2,23 @@
 <html lang="es">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<title>Github API</title>
+	<link rel="stylesheet" type="text/css" href="bcomponents/normalize-css/normalize.css" />
+	<link rel="stylesheet" type="text/css" href="css/gh.css" />
 </head>
 <body>
 	<header id="gh-header">
-		<h1>Github API</h1>
+		<div class="col8">
+			<h1>Github API</h1>
+		</div>
+		<div class="col4">
+			<figure id="avatar"><img src="{{ user.avatar_url }}" alt="{{ user.name }}" /></figure>
+			<span id="user_name">Bienvenido, <a href="{{ user.html_url }}">{{ user.login }}</a></span>
+		</div>
 	</header>
 	<section id="gh-body">
+		<p>{{ user|json }}</p>
 	</section>
 </body>
 </html>

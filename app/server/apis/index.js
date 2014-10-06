@@ -7,7 +7,7 @@ module.exports = function() {
 
 	oauth.prototype.userProfile = function(accessToken, done)
 	{
-		this._oauth2.get('https://api.github.com/user', accessToken, function (err, body, res) {
+		this._oauth2.get("https://api.github.com/user", accessToken, function (err, body, res) {
 		    var json;
 		    
 		    if (err) {
