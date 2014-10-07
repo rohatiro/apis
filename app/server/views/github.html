@@ -4,20 +4,34 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<title>Github API</title>
-	<link rel="stylesheet" type="text/css" href="bcomponents/normalize-css/normalize.css" />
+	<link rel="stylesheet" type="text/css" href="bcomponents/bootstrap/dist/css/bootstrap.css" />
 	<link rel="stylesheet" type="text/css" href="css/gh.css" />
+	<script type="text/javascript" src="bcomponents/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="bcomponents/bootstrap/dist/js/bootstrap.min.js"></script>
 </head>
 <body>
-	<header id="gh-header">
-		<div class="col8">
-			<h1>Github API</h1>
+	<header id="gh-header" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<span class="navbar-brand">Github API</span>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<a id="user_name" href="{{ user.html_url }}">
+							<figure id="avatar"><img src="{{ user.avatar_url }}" alt="{{ user.name }}" /></figure>
+							<span>{{ user.login }}</span>
+						</a>
+					</li>
+				</ul>
+			</div>
 		</div>
-		<div class="col4">
+		<!-- <div class="col4">
 			<figure id="avatar"><img src="{{ user.avatar_url }}" alt="{{ user.name }}" /></figure>
 			<span id="user_name">Bienvenido, <a href="{{ user.html_url }}">{{ user.login }}</a></span>
-		</div>
+		</div> -->
 	</header>
-	<section id="gh-body">
+	<section id="gh-body" class="container-fluid">
 		<p>{{ user|json }}</p>
 	</section>
 </body>
