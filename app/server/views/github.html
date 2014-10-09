@@ -26,13 +26,11 @@
 				</ul>
 			</div>
 		</div>
-		<!-- <div class="col4">
-			<figure id="avatar"><img src="{{ user.avatar_url }}" alt="{{ user.name }}" /></figure>
-			<span id="user_name">Bienvenido, <a href="{{ user.html_url }}">{{ user.login }}</a></span>
-		</div> -->
 	</header>
 	<section id="gh-body" class="container-fluid">
-		<p>{{ user|json }}</p>
+		{% for repo in repos %}
+			<p>{{ repo.name }}</p>
+		{% endfor %}
 	</section>
 </body>
 </html>
