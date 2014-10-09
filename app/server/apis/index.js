@@ -1,30 +1,10 @@
 module.exports = function() {
-	var passport,oauth,InternalOAuthError;
+	var passport,githubStrategy;
 
 	passport = require("passport");
-	oauth = require("passport-oauth2");
-	InternalOAuthError = oauth.InternalOAuthError;
+	githubStrategy = require("./github");
 
-	oauth.prototype.userProfile = function(accessToken, done)
-	{
-		this._oauth2.get("https://api.github.com/user", accessToken, function (err, body, res) {
-		    var json;
-		    
-		    if (err) {
-		      return done(new InternalOAuthError('Failed to fetch user profile', err));
-		    }
-		    
-		    try {
-		      json = JSON.parse(body);
-		    } catch (ex) {
-		      return done(new Error('Failed to parse user profile'));
-		    }
-		    
-		    done(null, json);
-		 });
-	};
-
-	passport.use('github', new oauth({
+	passport.use('github', new githubStrategy({
 		authorizationURL:"https://github.com/login/oauth/authorize",
 		tokenURL:"https://github.com/login/oauth/access_token",
 		clientID:"3215b0b69bdedbe58669",
