@@ -9,7 +9,7 @@ module.exports = function() {
 		tokenURL:"https://github.com/login/oauth/access_token",
 		clientID:"3215b0b69bdedbe58669",
 		clientSecret:"06edc9e06d1013eddef4781321243f615f41daa1",
-		callbackURL:"http://localhost:8000/login"
+		callbackURL:"http://localhost:8000/github/login"
 	}, function(accessToken, refreshToken, profile, done) {
 		process.nextTick(function() {
 			return done(null,profile);
