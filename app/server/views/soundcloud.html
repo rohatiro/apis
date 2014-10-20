@@ -3,23 +3,47 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
-	<link rel="stylesheet" type="text/css" href="bcomponents/normalize-css/normalize.css" />
-	<link rel="stylesheet" type="text/css" href="css/sc.css" />
+	<link rel="stylesheet" type="text/css" href="bcomponents/bootstrap/dist/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="css/gh.css" />
 	<script type="text/javascript" src="bcomponents/jquery/dist/jquery.min.js"></script>
 	<script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
 	<script type="text/javascript" src="js/waveform.js"></script>
 	<script type="text/javascript" src="js/swig.min.js"></script>
-	<script type="text/javascript" src="js/scapi.js"></script>
 </head>
 <body>
-	<header id="sc-header">
-		<div id="sc-headtitle">
-			<h1>SoundCloud API</h1>
+	<header id="gh-header" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<span class="navbar-brand">Soundcloud API</span>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<a id="user_name" href="{{ user.permalink_url }}">
+							<figure id="avatar"><img src="{{ user.avatar_url }}" alt="{{ user.full_name }}" /></figure>
+							<span>{{ user.username }}</span>
+						</a>
+					</li>
+				</ul>
+			</div>
 		</div>
-		<div id="sc-login"></div>
 	</header>
-	<section id="sc-contains">
-		<section id="tracks"></section>
+	<section id="gh-body" class="container-fluid">
+		{% for fav in favorites %}
+			<article class='track'>
+				<figure class='track-artwork-container'>
+					<a class='track-artwork-link' href='#'>
+						<img class='track-artwork-img' src='{{ fav.artwork_url }}' />
+					</a>
+				</figure>
+				<div class='track-controls-container'>
+					<div class='track-controls'>
+						<a href='#' class='btn play' onclick='event.preventDefault();scapi.Tracks.play(event, {{ fav.id }})'>Play</a href='#'>
+					</div>
+					<div class='waveform'></div>
+				</div>
+			 </article>
+		{% endfor %}
 	</section>
 </body>
 </html>

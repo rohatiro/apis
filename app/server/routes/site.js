@@ -10,7 +10,22 @@ home = function(req,res) {
 };
 
 soundcloud = function(req,res) {
-	res.render("soundcloud");
+	var clientid = req._passport.instance._strategy("soundcloud")._oauth2._clientId;
+	request({
+		method:"GET",
+		url:req.user.uri+"/favorites.json?client_id="+clientid,
+	},function(err,respond,body) {
+		try
+		{
+			var json = JSON.parse(body);
+			if (json.error) res.render("soundcloud",{error:true});
+			res.render("soundcloud",{user:req.user,favorites:json});
+		}
+		catch(ex)
+		{
+			res.render("soundcloud",{error:true});
+		}
+	});
 };
 
 github = function(req,res) {
