@@ -14,7 +14,6 @@ soundcloud = function(req,res) {
 };
 
 github = function(req,res) {
-	console.log(req.user.repos_url);
 	request({
 		method:"GET",
 		url:req.user.repos_url,
@@ -23,6 +22,7 @@ github = function(req,res) {
 		}
 	},function(err,resp,body) {
 		var repos = JSON.parse(body);
+		console.log(repos[0]);
 		res.render("github",{user:req.user,repos:repos});
 	});
 };
