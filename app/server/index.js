@@ -24,5 +24,5 @@ module.exports = function(server) {
 
 	routes(server,githubAPI);
 
-	server.listen(8000);
+	server.listen(5000);
 };
