@@ -24,5 +24,5 @@ module.exports = function(server) {
 
 	routes(server,githubAPI);
 
-	server.listen(5000);
+	server.listen(process.env.PORT || 8000);
 };
