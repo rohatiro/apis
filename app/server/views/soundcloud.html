@@ -9,14 +9,26 @@
 	<script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
 	<script type="text/javascript" src="js/waveform.js"></script>
 	<script type="text/javascript" src="js/swig.min.js"></script>
+	<script type="text/javascript">
+	</script>
 </head>
 <body>
 	<header id="gh-header" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container-fluid">
 			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span><span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
 				<span class="navbar-brand">Soundcloud API</span>
 			</div>
 			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<a href="/soundcloud/favorites">Favorites</a>
+					</li>
+				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li>
 						<a id="user_name" href="{{ user.permalink_url }}">
@@ -33,17 +45,26 @@
 			<article class='track'>
 				<figure class='track-artwork-container'>
 					<a class='track-artwork-link' href='#'>
-						<img class='track-artwork-img' src='{{ fav.artwork_url }}' />
+						<img class='track-artwork-img' src='{% if fav.artwork_url %} {{fav.artwork_url}} {% else %} {{fav.user.avatar_url}} {% endif %}' />
 					</a>
 				</figure>
 				<div class='track-controls-container'>
 					<div class='track-controls'>
-						<a href='#' class='btn play' onclick='event.preventDefault();scapi.Tracks.play(event, {{ fav.id }})'>Play</a href='#'>
+						<a href="javascript:void(0)" class='btn play' onclick='loadTrack(event, {{ fav.id }})'>Play</a href='#'>
 					</div>
 					<div class='waveform'></div>
 				</div>
 			 </article>
 		{% endfor %}
 	</section>
+	<script type="text/javascript">
+	$(".navbar-header .navbar-toggle").on("click",function() {
+		event.preventDefault();
+		var $this = $(this);
+		var $navbar = $this.parent().next();
+		$navbar[$this.hasClass("collapsed") ? "addClass" : "removeClass"]("in");
+		$this[$this.hasClass("collapsed") ? "removeClass" : "addClass"]("collapsed");
+	});
+	</script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-var home,login,request;
+var home,login,request,sctest;
 request = require("request");
 
 login = function(req,res) {
@@ -42,9 +42,17 @@ github = function(req,res) {
 	});
 };
 
+stream = function(req,res) {
+	var id = req.params.id
+	var client_id = req._passport.instance._strategy("soundcloud")._oauth2._clientId;
+	var url = "https://api.soundcloud.com/tracks/"+id+"/stream?client_id="+client_id;
+	req.pipe(request(url)).pipe(res);
+};
+
 module.exports = {
 	home:home,
 	login:login,
 	soundcloud:soundcloud,
-	github:github
+	github:github,
+	stream:stream
 };
