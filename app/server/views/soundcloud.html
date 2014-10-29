@@ -6,7 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="bcomponents/bootstrap/dist/css/bootstrap.css" />
 	<link rel="stylesheet" type="text/css" href="css/gh.css" />
 	<script type="text/javascript" src="bcomponents/jquery/dist/jquery.min.js"></script>
-	<script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
+	<script type="text/javascript" src="//connect.soundcloud.com/sdk.js"></script>
 	<script type="text/javascript" src="js/waveform.js"></script>
 	<script type="text/javascript" src="js/swig.min.js"></script>
 	<script type="text/javascript">
@@ -49,6 +49,9 @@
 					</a>
 				</figure>
 				<div class='track-controls-container'>
+					<div class="track-title-container">
+						<span class="track-title">{{fav.title}}</span>
+					</div>
 					<div class='track-controls'>
 						<a href="javascript:void(0)" class='btn play' id='{{ fav.id }}'>Play</a href='#'>
 					</div>

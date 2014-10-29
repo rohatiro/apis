@@ -23,14 +23,14 @@ module.exports = function(server,passport) {
 
 	passport.deserializeUser(function(user,done) {
 		done(null,user);
-	})
+	});
 
 	server.get("/", site.home);
 	server.get("/soundcloud", isLoggeds, site.soundcloud);
 	server.get("/soundcloud/login", passport.authenticate('soundcloud',{successRedirect:"/soundcloud",failureRedirect:"/"}));
+	server.get("/soundcloud/tracks/:id", isLoggeds, site.stream);
 	server.get("/github",isLoggedg, site.github);
 	server.get("/github/login", passport.authenticate('github',{successRedirect:"/github",failureRedirect:"/"}));
 	server.get("/auth/github",passport.authenticate('github',{"scope":["user","repo"]}));
 	server.get("/auth/soundcloud",passport.authenticate('soundcloud'));
-	server.get("/soundcloud/tracks/:id",site.stream);
 };
