@@ -42,7 +42,7 @@
 	</header>
 	<section id="gh-body" class="container-fluid">
 		{% for fav in favorites %}
-			<article class='track'>
+			<article class='track' id='{{ fav.id }}'>
 				<figure class='track-artwork-container'>
 					<a class='track-artwork-link' href='#'>
 						<img class='track-artwork-img' src='{% if fav.artwork_url %} {{fav.artwork_url}} {% else %} {{fav.user.avatar_url}} {% endif %}' />
@@ -53,9 +53,9 @@
 						<span class="track-title">{{fav.title}}</span>
 					</div>
 					<div class='track-controls'>
-						<a href="javascript:void(0)" class='btn play' id='{{ fav.id }}'>Play</a href='#'>
+						<a href="javascript:void(0)" class='btn play'>Play</a href='#'>
 					</div>
-					<div class='waveform'></div>
+					<div class='waveform' data-url="{{ fav.waveform_url }}"></div>
 				</div>
 			 </article>
 		{% endfor %}
