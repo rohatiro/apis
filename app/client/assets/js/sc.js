@@ -18,16 +18,18 @@ var createSound = function(element)
 	return sound;
 };
 $(function() {
-	var $tracks;
-	var sounds,i;
+	soundManager.onready(function() {
+		var $tracks;
+		var sounds,i;
 
-	sounds = [];
-	$tracks = $(".track");
+		sounds = [];
+		$tracks = $(".track");
 
-	for(i = 0; i < $tracks.length; i++)
-	{
-		sounds.push(createSound($tracks[i]));
-	}
+		for(i = 0; i < $tracks.length; i++)
+		{
+			sounds.push(createSound($tracks[i]));
+		}
 
-	window.sounds = sounds;
+		window.sounds = sounds;
+	});
 });
