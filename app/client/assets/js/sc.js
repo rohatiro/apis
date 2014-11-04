@@ -28,4 +28,6 @@ $(function() {
 	{
 		sounds.push(createSound($tracks[i]));
 	}
+
+	window.sounds = sounds;
 });
