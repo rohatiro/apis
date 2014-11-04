@@ -5,7 +5,7 @@ var createSound = function(element)
 	var options = {};
 	var id = Number($element.attr("id"));
 	var waveform = new Waveform({container:$element.find(".waveform")[0],innerColor:"#333",height:50,copper:true});
-	waveform.dataFromSoundCloudTrack({waveform_url:tracks.first().find(".waveform").attr("data-url")});
+	waveform.dataFromSoundCloudTrack({waveform_url:$element.find(".waveform").attr("data-url")});
 
 	var soundoptions = waveform.optionsForSyncedStream();
 
