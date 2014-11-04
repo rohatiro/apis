@@ -57,6 +57,7 @@ var waveform = function(req,res) {
 		query+=p+"="+params[p]+"&";
 	}
 	query = query.slice(0,query.length-1);
+	console.log(url+query);
 	req.pipe(request(url+query)).pipe(res);
 };
 
