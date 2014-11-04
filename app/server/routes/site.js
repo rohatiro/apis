@@ -50,7 +50,7 @@ var stream = function(req,res) {
 
 var waveform = function(req,res) {
 	var url = "http://www.waveformjs.org/w";
-	var params = req.params;
+	var params = req.query;
 	var query = "?";
 	for(var p in params)
 	{
