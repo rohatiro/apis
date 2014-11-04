@@ -22,7 +22,7 @@ $(function() {
 	var sounds,i;
 
 	sounds = [];
-	$tracks = $(".tracks");
+	$tracks = $(".track");
 
 	for(i = 0; i < $tracks.length; i++)
 	{
