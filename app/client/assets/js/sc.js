@@ -4,7 +4,7 @@ var createSound = function(element)
 	var uri = "/soundcloud/tracks/";
 	var options = {};
 	var id = Number($element.attr("id"));
-	var waveform = new Waveform({container:$element.find(".waveform")[0],innerColor:"#333",height:50,copper:true});
+	var waveform = new Waveform({container:$element.find(".waveform")[0],innerColor:"#333",height:50,copper:false});
 	waveform.dataFromSoundCloudTrack({waveform_url:$element.find(".waveform").attr("data-url")});
 
 	var soundoptions = waveform.optionsForSyncedStream();
