@@ -58,5 +58,6 @@ module.exports = {
 	login:login,
 	soundcloud:soundcloud,
 	github:github,
-	stream:stream
+	stream:stream,
+	waveform:waveform
 };
