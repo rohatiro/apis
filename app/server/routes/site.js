@@ -1,15 +1,14 @@
-var home,login,request,sctest;
-request = require("request");
+var request = require("request");
 
-login = function(req,res) {
+var login = function(req,res) {
 	res.render("login");
 };
 
-home = function(req,res) {
+var home = function(req,res) {
 	res.render("home");
 };
 
-soundcloud = function(req,res) {
+var soundcloud = function(req,res) {
 	var clientid = req._passport.instance._strategy("soundcloud")._oauth2._clientId;
 	request({
 		method:"GET",
@@ -28,7 +27,7 @@ soundcloud = function(req,res) {
 	});
 };
 
-github = function(req,res) {
+var github = function(req,res) {
 	console.log(req.user.repos_url);
 	request({
 		method:"GET",
@@ -42,10 +41,15 @@ github = function(req,res) {
 	});
 };
 
-stream = function(req,res) {
-	var id = req.params.id
+var stream = function(req,res) {
+	var id = req.params.id;
 	var client_id = req._passport.instance._strategy("soundcloud")._oauth2._clientId;
 	var url = "https://api.soundcloud.com/tracks/"+id+"/stream?client_id="+client_id;
+	req.pipe(request(url)).pipe(res);
+};
+
+var waveform = function(req,res) {
+	var url = "http://www.waveformjs.org/w";
 	req.pipe(request(url)).pipe(res);
 };
 
