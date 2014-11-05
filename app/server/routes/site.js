@@ -61,7 +61,14 @@ var waveform = function(req,res) {
 };
 
 var scconnect = function(req,res) {
-	req.pipe(request("https://soundcloud.com/connect")).pipe(res);
+	var params = req.query;
+	var query = "?";
+	for(var p in params)
+	{
+		query+=p+"="+params[p]+"&";
+	}
+	query = query.slice(0,query.length-1);
+	req.pipe(request("https://soundcloud.com/connect"+query)).pipe(res);
 };
 
 module.exports = {
