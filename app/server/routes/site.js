@@ -60,11 +60,16 @@ var waveform = function(req,res) {
 	req.pipe(request(url+query)).pipe(res);
 };
 
+var scconnect = function(req,res) {
+	req.pipe(request("https://soundcloud.com/connect")).pipe(res);
+};
+
 module.exports = {
 	home:home,
 	login:login,
 	soundcloud:soundcloud,
 	github:github,
 	stream:stream,
-	waveform:waveform
+	waveform:waveform,
+	scconnect:scconnect
 };
