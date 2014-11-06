@@ -114,6 +114,7 @@
       zerowd = t/2;
       wavewd = (this.width - (zerowd*this.zerolg))/this.wavelg;
       linewd = 0;
+      this.context.fillRect(0, middle - middle*0.06428571428571428, this.width, middle*0.06428571428571428);
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         d = _ref[_i];
         if (typeof this.innerColor === "function")
@@ -122,6 +123,7 @@
           this.context.fillStyle = this.innerColor;
         this.context.clearRect(t * i, middle - middle * d, (d === 0 ? zerowd : wavewd), middle * d);
         this.context.fillRect(t * i, middle - middle * d, (d === 0 ? zerowd : wavewd), middle * d);
+        this.context.fillRect(0, middle - middle*0.06428571428571428, linewd, middle*0.06428571428571428);
         if(d !== 0 && d !== 0.06428571428571428)
         {
           if (typeof this.innerColor === "function") this.context.fillStyle = this.ColorLuminance(this.innerColor(i / this.width, d),80);
@@ -131,8 +133,6 @@
         }
         _results.push(i++);
       }
-      if (typeof this.innerColor !== "function")
-        this.context.fillRect(0, middle - middle*0.06428571428571428, this.width, middle*0.06428571428571428);
       return _results;
     };
 
