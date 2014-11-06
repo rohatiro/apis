@@ -98,9 +98,9 @@
 
     Waveform.prototype.redrawOption = function() {
       if (this.croppe)
-        this.redrawCstm();
+        this.Waveform.redrawCstm();
       else
-        this.redraw();
+        this.Waveform.redraw();
     };
 
     Waveform.prototype.redrawCstm = function() {
@@ -252,7 +252,7 @@
       innerColorWasSet = false;
       that = this;
       return {
-        whileplaying: this.Waveform.redrawOption,
+        whileplaying: this.redrawOption,
         whileloading: function() {
           var stream;
           if (!innerColorWasSet) {
@@ -268,7 +268,7 @@
             };
             innerColorWasSet = true;
           }
-          return this.Waveform.redrawOption;
+          return this.redrawOption;
         }
       };
     };
