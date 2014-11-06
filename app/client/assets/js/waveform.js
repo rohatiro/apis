@@ -129,19 +129,10 @@
           this.context.clearRect(t * i, middle, (d === 0 ? zerowd : wavewd), (middle * d)/2);
           this.context.fillRect(t * i, middle, (d === 0 ? zerowd : wavewd), (middle * d)/2);
         }
-        if (typeof this.innerColor === "function"){
-          linewd += (d === 0 ? zerowd : wavewd);
-          this.context.fillStyle = this.innerColor(i / this.width, d);
-          this.context.fillRect(0, middle - middle*0.06428571428571428, linewd, middle*0.06428571428571428);
-        }
-
         _results.push(i++);
       }
-      if (typeof this.innerColor === "function")
-        this.context.fillStyle = this.innerColor(i / this.width, d);
-      else
-        this.context.fillStyle = this.innerColor;
-      this.context.fillRect(0, middle - middle*0.06428571428571428, this.width, middle*0.06428571428571428);
+      if (typeof this.innerColor !== "function")
+        this.context.fillRect(0, middle - middle*0.06428571428571428, this.width, middle*0.06428571428571428);
       return _results;
     };
 
