@@ -18,7 +18,7 @@
       if (options.interpolate === false) {
         this.interpolate = false;
       }
-      if (this.canvas == null) {
+      if (this.canvas === null) {
         if (this.container) {
           this.canvas = this.createCanvas(this.container, options.width || this.container.clientWidth, options.height || this.container.clientHeight);
         } else {
@@ -43,7 +43,8 @@
     };
 
     Waveform.prototype.setData = function(data) {
-      return this.data = data;
+      this.data = data;
+      return this.data;
     };
 
     Waveform.prototype.setDataInterpolated = function(data) {
@@ -57,7 +58,7 @@
     Waveform.prototype.croppeArray = function(data) {
       var j = 0,i,newdata = [];
       for(i = 0; i < data.length; i++) {
-        if(j == 0) {
+        if(j === 0) {
           newdata.push(data[i]);
           j = 1;
         }
@@ -77,14 +78,42 @@
       if (options.interpolate != null) {
         this.interpolate = options.interpolate;
       }
-      if (this.croppe)
+      if (this.croppe){
           this.setDataCroppedCustm(options.data);
+          return this.redrawCstm();
+      }
       else if (this.interpolate === false) {
           this.setDataCropped(options.data);
+          return this.redraw();
       } else {
           this.setDataInterpolated(options.data);
+          return this.redraw();
       }
-      return this.redraw();
+    };
+
+    Waveform.prototype.redrawCstm = function() {
+      var d, i, middle, t, _i, _len, _ref, _results;
+      this.clear();
+      if (typeof this.innerColor === "function") {
+        this.context.fillStyle = this.innerColor();
+      } else {
+        this.context.fillStyle = this.innerColor;
+      }
+      middle = this.height / 2;
+      i = 0;
+      _ref = this.data;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        d = _ref[_i];
+        t = this.width / this.data.length;
+        if (typeof this.innerColor === "function") {
+          this.context.fillStyle = this.innerColor(i / this.width, d);
+        }
+        this.context.clearRect(t * i, middle - middle * d, t, middle * d);
+        this.context.fillRect(t * i, middle - middle * d, t, middle * d);
+        _results.push(i++);
+      }
+      return _results;
     };
 
     Waveform.prototype.redraw = function() {
