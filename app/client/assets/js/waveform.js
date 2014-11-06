@@ -113,6 +113,7 @@
         this.context.fillRect(t * i, middle - middle * d, t, middle * d);
         _results.push(i++);
       }
+      this.context.fillRect(t * i, middle, this.width, 2);
       return _results;
     };
 
