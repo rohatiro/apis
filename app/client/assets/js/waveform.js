@@ -252,7 +252,7 @@
       innerColorWasSet = false;
       that = this;
       return {
-        whileplaying: this.redrawOption,
+        whileplaying: that.redrawOption,
         whileloading: function() {
           var stream;
           if (!innerColorWasSet) {
@@ -268,7 +268,7 @@
             };
             innerColorWasSet = true;
           }
-          return this.redrawOption;
+          return that.redrawOption;
         }
       };
     };
