@@ -113,7 +113,7 @@
         this.context.fillRect(t * i, middle - middle * d, t, middle * d);
         _results.push(i++);
       }
-      this.context.fillRect(t * i, middle, this.width, 2);
+      this.context.fillRect(0, middle, this.width, 2);
       return _results;
     };
 
@@ -136,7 +136,7 @@
           this.context.fillStyle = this.innerColor(i / this.width, d);
         }
         this.context.clearRect(t * i, middle - middle * d, t, middle * d * 2);
-        this.context.fillRect(0, middle - middle * d, t, middle * d * 2);
+        this.context.fillRect(t * i, middle - middle * d, t, middle * d * 2);
         _results.push(i++);
       }
       return _results;
