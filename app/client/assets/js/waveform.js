@@ -252,7 +252,9 @@
       innerColorWasSet = false;
       that = this;
       return {
-        whileplaying: that.redrawOption,
+        whileplaying: function() {
+          return that.redrawOption;
+        },
         whileloading: function() {
           var stream;
           if (!innerColorWasSet) {
