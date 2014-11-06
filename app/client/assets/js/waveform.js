@@ -245,7 +245,7 @@
       innerColorWasSet = false;
       that = this;
       return {
-        whileplaying: that.croppe ? that.redrawCstm : that.redraw,
+        whileplaying: this.croppe ? this.redrawCstm : this.redraw,
         whileloading: function() {
           var stream;
           if (!innerColorWasSet) {
@@ -261,7 +261,7 @@
             };
             innerColorWasSet = true;
           }
-          return that.croppe ? that.redrawCstm : that.redraw;
+          return this.croppe ? this.redrawCstm : this.redraw;
         }
       };
     };
