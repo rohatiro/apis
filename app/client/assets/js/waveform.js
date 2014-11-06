@@ -104,7 +104,7 @@
     };
 
     Waveform.prototype.redrawCstm = function() {
-      var d, i, middle, t, _i, _len, _ref, _results,zerowd,wavewd;
+      var d, i, middle, t, _i, _len, _ref, _results,zerowd,wavewd,linewd;
       this.clear();
       middle = this.height / 2;
       i = 0;
@@ -113,6 +113,7 @@
       t = this.width / this.data.length;
       zerowd = t/2;
       wavewd = (this.width - (zerowd*this.zerolg))/this.wavelg;
+      linewd = 0;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         d = _ref[_i];
         if (typeof this.innerColor === "function")
@@ -128,8 +129,18 @@
           this.context.clearRect(t * i, middle, (d === 0 ? zerowd : wavewd), (middle * d)/2);
           this.context.fillRect(t * i, middle, (d === 0 ? zerowd : wavewd), (middle * d)/2);
         }
+        if (typeof this.innerColor === "function"){
+          linewd += (d === 0 ? zerowd : wavewd);
+          this.context.fillStyle = this.innerColor(i / this.width, d);
+          this.context.fillRect(0, middle - middle*0.06428571428571428, linewd, middle*0.06428571428571428);
+        }
+
         _results.push(i++);
       }
+      if (typeof this.innerColor === "function")
+        this.context.fillStyle = this.innerColor(i / this.width, d);
+      else
+        this.context.fillStyle = this.innerColor;
       this.context.fillRect(0, middle - middle*0.06428571428571428, this.width, middle*0.06428571428571428);
       return _results;
     };
