@@ -57,17 +57,22 @@
 
     Waveform.prototype.croppeArray = function(data) {
       var j = 0,i,newdata = [];
+      this.zerolg = 0;
+      this.wavelg = 0;
       for(i = 0; i < data.length; i++) {
         if(j === 0) {
           newdata.push(data[i]);
+          this.wavelg++;
           j = 1;
         }
         else if(j == 1){
           newdata.push(data[i - 1]);
+          this.wavelg++;
           j = 2;
         }
         else if(j == 2){
           newdata.push(0);
+          this.zerolg++;
           j = 0;
         }
       }
@@ -92,33 +97,38 @@
     };
 
     Waveform.prototype.redrawCstm = function() {
-      var d, i, middle, t, _i, _len, _ref, _results;
+      var d, i, middle, t, _i, _len, _ref, _results,zerowd,wavewd;
       this.clear();
-      if (typeof this.innerColor === "function") {
-        this.context.fillStyle = this.innerColor();
-      } else {
-        this.context.fillStyle = this.innerColor;
-      }
       middle = this.height / 2;
       i = 0;
       _ref = this.data;
       _results = [];
+      t = this.width / this.data.length;
+      zerowd = t/2;
+      wavewd = (this.width - (zerowd*this.zerolg))/this.wavelg;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         d = _ref[_i];
-        t = this.width / this.data.length;
-        if (typeof this.innerColor === "function") {
+        if (typeof this.innerColor === "function")
           this.context.fillStyle = this.innerColor(i / this.width, d);
+        else
+          this.context.fillStyle = this.innerColor;
+        this.context.clearRect(t * i, middle - middle * d, (d === 0 ? zerowd : wavewd), middle * d);
+        this.context.fillRect(t * i, middle - middle * d, (d === 0 ? zerowd : wavewd), middle * d);
+        if(d !== 0 && d !== 0.06428571428571428)
+        {
+          if (typeof this.innerColor === "function") this.context.fillStyle = this.ColorLuminance(this.innerColor(i / this.width, d),80);
+          else this.context.fillStyle = this.ColorLuminance(this.innerColor,80);
+          this.context.clearRect(t * i, middle, (d === 0 ? zerowd : wavewd), (middle * d)/2);
+          this.context.fillRect(t * i, middle, (d === 0 ? zerowd : wavewd), (middle * d)/2);
         }
-        this.context.clearRect(t * i, middle - middle * d, t, middle * d);
-        this.context.fillRect(t * i, middle - middle * d, t, middle * d);
         _results.push(i++);
       }
-      this.context.fillRect(0, middle, this.width, 2);
+      this.context.fillRect(0, middle - middle*0.06428571428571428, this.width, middle*0.06428571428571428);
       return _results;
     };
 
     Waveform.prototype.redraw = function() {
-      var d, i, middle, t, _i, _len, _ref, _results;
+      var d, i, middle, t, _i, _len, _ref, _results,zerowd,wavewd;
       this.clear();
       if (typeof this.innerColor === "function") {
         this.context.fillStyle = this.innerColor();
@@ -129,9 +139,9 @@
       i = 0;
       _ref = this.data;
       _results = [];
+      t = this.width / this.data.length;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         d = _ref[_i];
-        t = this.width / this.data.length;
         if (typeof this.innerColor === "function") {
           this.context.fillStyle = this.innerColor(i / this.width, d);
         }
@@ -191,6 +201,24 @@
       return before + (after - before) * atPoint;
     };
 
+    Waveform.prototype.ColorLuminance = function(hex, percent) {
+      // strip the leading # if it's there
+      hex = hex.replace(/^\s*#|\s*$/g, '');
+
+      if(hex.length == 3){
+          hex = hex.replace(/(.)/g, '$1$1');
+      }
+
+      var r = parseInt(hex.substr(0, 2), 16),
+          g = parseInt(hex.substr(2, 2), 16),
+          b = parseInt(hex.substr(4, 2), 16);
+
+      return '#' +
+         ((0|(1<<8) + r + (256 - r) * percent / 100).toString(16)).substr(1) +
+         ((0|(1<<8) + g + (256 - g) * percent / 100).toString(16)).substr(1) +
+         ((0|(1<<8) + b + (256 - b) * percent / 100).toString(16)).substr(1);
+    };
+
     Waveform.prototype.interpolateArray = function(data, fitCount) {
       var after, atPoint, before, i, newData, springFactor, tmp;
       newData = new Array();
@@ -224,11 +252,11 @@
             stream = this;
             that.innerColor = function(x, y) {
               if (x < stream.position / stream.durationEstimate) {
-                return options.playedColor || "rgba(255,  102, 0, 0.8)";
+                return options.playedColor || that.ColorLuminance("#FF6600",20);
               } else if (x < stream.bytesLoaded / stream.bytesTotal) {
-                return options.loadedColor || "rgba(0, 0, 0, 0.8)";
+                return options.loadedColor || that.ColorLuminance("#999999",0);
               } else {
-                return options.defaultColor || "rgba(0, 0, 0, 0.4)";
+                return options.defaultColor || that.ColorLuminance("#333",0);
               }
             };
             innerColorWasSet = true;
