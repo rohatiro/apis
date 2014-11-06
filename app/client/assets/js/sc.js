@@ -33,4 +33,17 @@ $(function() {
 
 		window.sounds = sounds;
 	});
+	$(".track-controls").on("click",".btn",function() {
+		var e = $(event.srcElement || event.currentElement);
+		var parentcontainer = e.parent().parent();
+		var id = Number(parentcontainer.attr("id"));
+		if(e.hasClass("play")) {
+			e.removeClass("play").addClass("pause");
+			soundManager.getSoundById("id").play();
+		}
+		else if(e.hasClass("pause")) {
+			e.removeClass("pause").addClass("play");
+			soundManager.getSoundById("id").pause();
+		}
+	});
 });
