@@ -245,7 +245,7 @@
       innerColorWasSet = false;
       that = this;
       return {
-        whileplaying: this.redraw,
+        whileplaying: that.croppe ? that.redrawCstm : that.redraw,
         whileloading: function() {
           var stream;
           if (!innerColorWasSet) {
