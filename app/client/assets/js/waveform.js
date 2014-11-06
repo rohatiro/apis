@@ -254,14 +254,14 @@
               if (x < stream.position / stream.durationEstimate) {
                 return options.playedColor || that.ColorLuminance("#FF6600",20);
               } else if (x < stream.bytesLoaded / stream.bytesTotal) {
-                return options.loadedColor || that.ColorLuminance("#999999",0);
+                return options.loadedColor || that.ColorLuminance("#333",0);
               } else {
-                return options.defaultColor || that.ColorLuminance("#333",0);
+                return options.defaultColor || that.ColorLuminance("#999",0);
               }
             };
             innerColorWasSet = true;
           }
-          return this.redraw;
+          return that.croppe ? that.redrawCstm : that.redraw;
         }
       };
     };
