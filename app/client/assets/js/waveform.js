@@ -252,9 +252,7 @@
       innerColorWasSet = false;
       that = this;
       return {
-        whileplaying: function() {
-          return that.redrawOption;
-        },
+        whileplaying: this.Waveform.redrawOption,
         whileloading: function() {
           var stream;
           if (!innerColorWasSet) {
@@ -270,7 +268,7 @@
             };
             innerColorWasSet = true;
           }
-          return that.redrawOption;
+          return this.Waveform.redrawOption;
         }
       };
     };

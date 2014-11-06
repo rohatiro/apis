@@ -15,6 +15,7 @@ var createSound = function(element)
 	options.whileloading = soundoptions.whileloading;
 
 	var sound = soundManager.createSound(options);
+	sound.Waveform = waveform;
 	return sound;
 };
 $(function() {
