@@ -96,6 +96,13 @@
       }
     };
 
+    Waveform.prototype.redrawOption = function() {
+      if (this.croppe)
+        this.redrawCstm();
+      else
+        this.redraw();
+    };
+
     Waveform.prototype.redrawCstm = function() {
       var d, i, middle, t, _i, _len, _ref, _results,zerowd,wavewd;
       this.clear();
@@ -245,7 +252,7 @@
       innerColorWasSet = false;
       that = this;
       return {
-        whileplaying: this.croppe ? this.redrawCstm : this.redraw,
+        whileplaying: this.redrawOption,
         whileloading: function() {
           var stream;
           if (!innerColorWasSet) {
@@ -261,7 +268,7 @@
             };
             innerColorWasSet = true;
           }
-          return this.croppe ? this.redrawCstm : this.redraw;
+          return this.redrawOption;
         }
       };
     };
