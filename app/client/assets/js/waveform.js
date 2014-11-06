@@ -97,7 +97,7 @@
     };
 
     Waveform.prototype.redrawOption = function() {
-      if (this.croppe)
+      if (this.Waveform.croppe)
         this.Waveform.redrawCstm();
       else
         this.Waveform.redraw();
