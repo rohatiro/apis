@@ -13,6 +13,7 @@
       this.data = options.data || [];
       this.outerColor = options.outerColor || "transparent";
       this.innerColor = options.innerColor || "#000000";
+      this.defaultInnerColor = options.innerColor || "#000000";
       this.croppe = options.croppe || false;
       this.interpolate = true;
       if (options.interpolate === false) {
@@ -123,7 +124,6 @@
           this.context.fillStyle = this.innerColor;
         this.context.clearRect(t * i, middle - middle * d, (d === 0 ? zerowd : wavewd), middle * d);
         this.context.fillRect(t * i, middle - middle * d, (d === 0 ? zerowd : wavewd), middle * d);
-        this.context.fillRect(0, middle - middle*0.06428571428571428, linewd, middle*0.06428571428571428);
         if(d !== 0 && d !== 0.06428571428571428)
         {
           if (typeof this.innerColor === "function") this.context.fillStyle = this.ColorLuminance(this.innerColor(i / this.width, d),80);
@@ -131,6 +131,9 @@
           this.context.clearRect(t * i, middle, (d === 0 ? zerowd : wavewd), (middle * d)/2);
           this.context.fillRect(t * i, middle, (d === 0 ? zerowd : wavewd), (middle * d)/2);
         }
+        this.context.fillRect(0, middle - middle*0.06428571428571428, linewd, middle*0.06428571428571428);
+        this.context.fillStyle = this.defaultInnerColor;
+        this.context.fillRect(linewd, middle - middle*0.06428571428571428, this.width - linewd, middle*0.06428571428571428);
         _results.push(i++);
       }
       return _results;
