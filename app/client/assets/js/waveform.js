@@ -127,8 +127,8 @@
         {
           if (typeof this.innerColor === "function") this.context.fillStyle = this.ColorLuminance(this.innerColor(i / this.width, d),60);
           else this.context.fillStyle = this.ColorLuminance(this.innerColor,60);
-          this.context.clearRect(t * i, middle, (d === 0 ? zerowd : wavewd), (middle * d)/2);
-          this.context.fillRect(t * i, middle, (d === 0 ? zerowd : wavewd), (middle * d)/2);
+          this.context.clearRect(t * i, middle, (d === 0 ? zerowd : wavewd), (middle * d)/3);
+          this.context.fillRect(t * i, middle, (d === 0 ? zerowd : wavewd), (middle * d)/3);
         }
         _results.push(i++);
       }
