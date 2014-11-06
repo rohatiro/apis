@@ -39,11 +39,11 @@ $(function() {
 		var id = Number(parentcontainer.attr("id"));
 		if(e.hasClass("play")) {
 			e.removeClass("play").addClass("pause");
-			soundManager.getSoundById("id").play();
+			soundManager.getSoundById(id).play();
 		}
 		else if(e.hasClass("pause")) {
 			e.removeClass("pause").addClass("play");
-			soundManager.getSoundById("id").pause();
+			soundManager.getSoundById(id).pause();
 		}
 	});
 });
