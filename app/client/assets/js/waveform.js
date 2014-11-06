@@ -18,7 +18,7 @@
       if (options.interpolate === false) {
         this.interpolate = false;
       }
-      if (this.canvas === null) {
+      if (this.canvas == null) {
         if (this.container) {
           this.canvas = this.createCanvas(this.container, options.width || this.container.clientWidth, options.height || this.container.clientHeight);
         } else {
