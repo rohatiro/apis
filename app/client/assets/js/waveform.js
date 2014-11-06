@@ -125,8 +125,8 @@
         this.context.fillRect(t * i, middle - middle * d, (d === 0 ? zerowd : wavewd), middle * d);
         if(d !== 0.06428571428571428)
         {
-          if (typeof this.innerColor === "function") this.context.fillStyle = this.ColorLuminance(this.innerColor(i / this.width, d),80);
-          else this.context.fillStyle = this.ColorLuminance(this.innerColor,80);
+          if (typeof this.innerColor === "function") this.context.fillStyle = this.ColorLuminance(this.innerColor(i / this.width, d),60);
+          else this.context.fillStyle = this.ColorLuminance(this.innerColor,60);
           this.context.clearRect(t * i, middle, (d === 0 ? zerowd : wavewd), (middle * d)/2);
           this.context.fillRect(t * i, middle, (d === 0 ? zerowd : wavewd), (middle * d)/2);
         }
@@ -262,7 +262,7 @@
               if (x < stream.position / stream.durationEstimate) {
                 return options.playedColor || that.ColorLuminance("#FF6600",20);
               } else if (x < stream.bytesLoaded / stream.bytesTotal) {
-                return options.loadedColor || that.ColorLuminance("#333",0);
+                return options.loadedColor || that.ColorLuminance("#555",0);
               } else {
                 return options.defaultColor || that.ColorLuminance("#999",0);
               }
