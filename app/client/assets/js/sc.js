@@ -35,7 +35,7 @@ $(function() {
 	});
 	$(".track-controls").on("click",".btn",function() {
 		var e = $(event.srcElement || event.currentElement);
-		var parentcontainer = e.parent().parent();
+		var parentcontainer = e.parent().parent().parent();
 		var id = Number(parentcontainer.attr("id"));
 		if(e.hasClass("play")) {
 			e.removeClass("play").addClass("pause");
