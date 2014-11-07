@@ -1,5 +1,5 @@
 node_modules/
 app/client/assets/bcomponents/
-app/client/assets/styl/
+app/client/assets/css/
 *.sublime-project
 *.sublime-workspace
