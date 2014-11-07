@@ -41,14 +41,14 @@ window.Track_Waveform = Backbone.View.extend({
 		this.model = model;
 	},
 	play: function(event) {
-		var e = $(event.srcElement || event.currentElement);
+		var e = $(event.currentTarget);
 		var parentcontainer = e.parent().parent().parent();
 		var id = Number(parentcontainer.attr("id"));
 		e.removeClass("play").addClass("pause");
 		soundManager.getSoundById(id).play();
 	},
 	pause: function(event) {
-		var e = $(event.srcElement || event.currentElement);
+		var e = $(event.currentTarget);
 		var parentcontainer = e.parent().parent().parent();
 		var id = Number(parentcontainer.attr("id"));
 		e.removeClass("pause").addClass("play");
