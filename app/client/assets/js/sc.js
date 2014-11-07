@@ -87,9 +87,6 @@ var createSound = function(element)
 };
 window.Tracks = new _Tracks();
 window.Tracks.on("add",createWaveform);
-window.is992 = false;
-window.is768 = false;
-window.is1200 = false;
 $(function() {
 	soundManager.onready(function() {
 		var $tracks;
@@ -103,65 +100,11 @@ $(function() {
 		w = $(window);
 		w.resize(function() {
 			var i,width;
-			if(w.width() < 768 && !window.is768)
+			for(i=0;i<Tracks.length;i++)
 			{
-				for(i=0;i<Tracks.length;i++)
-				{
-					width = Tracks.models[i].view.$el.find(".track-controls-container").width();
-					Tracks.models[i].view.$el.find(".track-controls-container canvas").css({width:width});
-					Tracks.models[i].waveform.redrawCstm();
-				}
-				window.is768 = true;
-			}
-			else if(w.width() < 992 && !window.is992)
-			{
-				for(i=0;i<Tracks.length;i++)
-				{
-					width = Tracks.models[i].view.$el.find(".track-controls-container").width();
-					Tracks.models[i].view.$el.find(".track-controls-container canvas").css({width:width});
-					Tracks.models[i].waveform.redrawCstm();
-				}
-				window.is992 = true;
-			}
-			else if(w.width() < 1200 && !window.is1200)
-			{
-				for(i=0;i<Tracks.length;i++)
-				{
-					width = Tracks.models[i].view.$el.find(".track-controls-container").width();
-					Tracks.models[i].view.$el.find(".track-controls-container canvas").css({width:width});
-					Tracks.models[i].waveform.redrawCstm();
-				}
-				window.is1200 = true;
-			}
-			else if(w.width() >= 768 && window.is768)
-			{
-				for(i=0;i<Tracks.length;i++)
-				{
-					width = Tracks.models[i].view.$el.find(".track-controls-container").width();
-					Tracks.models[i].view.$el.find(".track-controls-container canvas").css({width:width});
-					Tracks.models[i].waveform.redrawCstm();
-				}
-				window.is768 = false;
-			}
-			else if(w.width() >= 992 && window.is992)
-			{
-				for(i=0;i<Tracks.length;i++)
-				{
-					width = Tracks.models[i].view.$el.find(".track-controls-container").width();
-					Tracks.models[i].view.$el.find(".track-controls-container canvas").css({width:width});
-					Tracks.models[i].waveform.redrawCstm();
-				}
-				window.is992 = false;
-			}
-			else if(w.width() >= 1200 && window.is1200)
-			{
-				for(i=0;i<Tracks.length;i++)
-				{
-					width = Tracks.models[i].view.$el.find(".track-controls-container").width();
-					Tracks.models[i].view.$el.find(".track-controls-container canvas").css({width:width});
-					Tracks.models[i].waveform.redrawCstm();
-				}
-				window.is1200 = false;
+				width = Tracks.models[i].view.$el.find(".track-controls-container").width();
+				Tracks.models[i].view.$el.find(".track-controls-container canvas").css({width:width});
+				Tracks.models[i].waveform.redrawCstm();
 			}
 		});
 	});
