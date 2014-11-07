@@ -15,7 +15,7 @@ window._Track = Backbone.Model.extend({
 
 		var sound = soundManager.createSound(options);
 		sound.model = this;
-		
+
 		this.waveform = waveform;
 		this.sound = sound;
 	},
@@ -87,6 +87,8 @@ var createSound = function(element)
 };
 window.Tracks = new _Tracks();
 window.Tracks.on("add",createWaveform);
+window.is992 = false;
+window.is768 = false;
 $(function() {
 	soundManager.onready(function() {
 		var $tracks;
@@ -96,5 +98,27 @@ $(function() {
 		$tracks = $(".track");
 
 		for(i = 0; i < $tracks.length; i++) createSound($tracks[i]);
+
+		w = $(window);
+		w.resize(function() {
+			var i;
+			if(w.width() <= 992 && !window.is992)
+			{
+				for(i=0;i<Tracks.length;i++)
+					Tracks.models[i].waveform.redrawCstm();
+				window.is992 = true;
+			}
+			else if(w.width() <= 768 && !window.is768)
+			{
+				for(i=0;i<Tracks.length;i++)
+					Tracks.models[i].waveform.redrawCstm();
+				window.is768 = true;
+			}
+			else
+			{
+				window.is992 = false;
+				window.is768 = false;
+			}
+		});
 	});
 });

@@ -107,6 +107,7 @@
     Waveform.prototype.redrawCstm = function() {
       var d, i, middle, t, _i, _len, _ref, _results,zerowd,wavewd,linewd;
       this.clear();
+      this.width = parseInt(this.context.canvas.width, 10);
       middle = this.height / 2;
       i = 0;
       _ref = this.data;
