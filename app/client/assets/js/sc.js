@@ -114,7 +114,7 @@ $(function() {
 					Tracks.models[i].waveform.redrawCstm();
 				window.is768 = true;
 			}
-			else
+			else if(w.width() > 992)
 			{
 				window.is992 = false;
 				window.is768 = false;
