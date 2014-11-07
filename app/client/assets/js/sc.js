@@ -89,6 +89,7 @@ window.Tracks = new _Tracks();
 window.Tracks.on("add",createWaveform);
 window.is992 = false;
 window.is768 = false;
+window.is1200 = false;
 $(function() {
 	soundManager.onready(function() {
 		var $tracks;
@@ -107,7 +108,7 @@ $(function() {
 				for(i=0;i<Tracks.length;i++)
 				{
 					width = Tracks.models[i].view.$el.find(".track-controls-container").width();
-					Tracks.models[0].view.$el.find(".track-controls-container canvas").css({width:width});
+					Tracks.models[i].view.$el.find(".track-controls-container canvas").css({width:width});
 					Tracks.models[i].waveform.redrawCstm();
 				}
 				window.is992 = true;
@@ -117,10 +118,20 @@ $(function() {
 				for(i=0;i<Tracks.length;i++)
 				{
 					width = Tracks.models[i].view.$el.find(".track-controls-container").width();
-					Tracks.models[0].view.$el.find(".track-controls-container canvas").css({width:width});
+					Tracks.models[i].view.$el.find(".track-controls-container canvas").css({width:width});
 					Tracks.models[i].waveform.redrawCstm();
 				}
 				window.is768 = true;
+			}
+			else if(w.width() <= 1200 && !window.is1200)
+			{
+				for(i=0;i<Tracks.length;i++)
+				{
+					width = Tracks.models[i].view.$el.find(".track-controls-container").width();
+					Tracks.models[i].view.$el.find(".track-controls-container canvas").css({width:width});
+					Tracks.models[i].waveform.redrawCstm();
+				}
+				window.is1200 = true;
 			}
 			else if(w.width() > 992)
 			{
