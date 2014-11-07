@@ -41,17 +41,21 @@ window.Track_Waveform = Backbone.View.extend({
 		this.model = model;
 	},
 	play: function(event) {
+		var self = this;
 		var e = $(event.currentTarget);
 		var parentcontainer = e.parent().parent().parent();
-		var id = Number(parentcontainer.attr("id"));
 		e.removeClass("play").addClass("pause");
+		var id = Number(parentcontainer.attr("id"));
+		id = self.collection.where({oid:id})[0].toJSON().id;
 		soundManager.getSoundById(id).play();
 	},
 	pause: function(event) {
+		var self = this;
 		var e = $(event.currentTarget);
 		var parentcontainer = e.parent().parent().parent();
-		var id = Number(parentcontainer.attr("id"));
 		e.removeClass("pause").addClass("play");
+		var id = Number(parentcontainer.attr("id"));
+		id = self.collection.where({oid:id})[0].toJSON().id;
 		soundManager.getSoundById(id).pause();
 	},
 });
