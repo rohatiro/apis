@@ -3,6 +3,7 @@ window._Track = Backbone.Model.extend({
 	{
 		var options = {};
 		var attrs = this.toJSON();
+		var $element = $("#"+attrs.oid);
 		var waveform = new Waveform({container:$element.find(".waveform")[0],innerColor:"#555",height:60,croppe:true});
 		waveform.dataFromSoundCloudTrack({waveform_url:$element.find(".waveform").attr("data-url")});
 		var soundoptions = waveform.optionsForSyncedStream();
