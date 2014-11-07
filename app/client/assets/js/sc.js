@@ -111,7 +111,7 @@ $(function() {
 					Tracks.models[i].view.$el.find(".track-controls-container canvas").css({width:width});
 					Tracks.models[i].waveform.redrawCstm();
 				}
-				window.is992 = true;
+				window.is768 = true;
 			}
 			else if(w.width() <= 992 && !window.is992)
 			{
@@ -121,7 +121,7 @@ $(function() {
 					Tracks.models[i].view.$el.find(".track-controls-container canvas").css({width:width});
 					Tracks.models[i].waveform.redrawCstm();
 				}
-				window.is768 = true;
+				window.is992 = true;
 			}
 			else if(w.width() <= 1200 && !window.is1200)
 			{
