@@ -55,7 +55,7 @@ window.Track_Waveform = Backbone.View.extend({
 	},
 });
 window._Tracks = Backbone.Collection.extend({
-	model:Track
+	model:_Track
 });
 var createWaveform = function(track)
 {
