@@ -106,7 +106,7 @@ $(function() {
 			{
 				for(i=0;i<Tracks.length;i++)
 				{
-					width = Tracks.models[0].view.$el.find(".track-controls-container").width();
+					width = Tracks.models[i].view.$el.find(".track-controls-container").width();
 					Tracks.models[0].view.$el.find(".track-controls-container canvas").css({width:width});
 					Tracks.models[i].waveform.redrawCstm();
 				}
@@ -116,7 +116,7 @@ $(function() {
 			{
 				for(i=0;i<Tracks.length;i++)
 				{
-					width = Tracks.models[0].view.$el.find(".track-controls-container").width();
+					width = Tracks.models[i].view.$el.find(".track-controls-container").width();
 					Tracks.models[0].view.$el.find(".track-controls-container canvas").css({width:width});
 					Tracks.models[i].waveform.redrawCstm();
 				}
