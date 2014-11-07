@@ -98,10 +98,10 @@
     };
 
     Waveform.prototype.redrawOption = function() {
-      if (this.Waveform.croppe)
-        this.Waveform.redrawCstm();
+      if (this.model.waveform.croppe)
+        this.model.waveform.redrawCstm();
       else
-        this.Waveform.redraw();
+        this.model.waveform.redraw();
     };
 
     Waveform.prototype.redrawCstm = function() {

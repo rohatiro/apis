@@ -14,7 +14,8 @@ window._Track = Backbone.Model.extend({
 		options.whileloading = soundoptions.whileloading;
 
 		var sound = soundManager.createSound(options);
-
+		sound.model = this;
+		
 		this.waveform = waveform;
 		this.sound = sound;
 	},
