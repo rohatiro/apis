@@ -103,7 +103,7 @@ $(function() {
 		w = $(window);
 		w.resize(function() {
 			var i,width;
-			if(w.width() <= 768 && !window.is768)
+			if(w.width() < 768 && !window.is768)
 			{
 				for(i=0;i<Tracks.length;i++)
 				{
@@ -113,7 +113,7 @@ $(function() {
 				}
 				window.is768 = true;
 			}
-			else if(w.width() <= 992 && !window.is992)
+			else if(w.width() < 992 && !window.is992)
 			{
 				for(i=0;i<Tracks.length;i++)
 				{
@@ -123,7 +123,7 @@ $(function() {
 				}
 				window.is992 = true;
 			}
-			else if(w.width() <= 1200 && !window.is1200)
+			else if(w.width() < 1200 && !window.is1200)
 			{
 				for(i=0;i<Tracks.length;i++)
 				{
@@ -133,7 +133,7 @@ $(function() {
 				}
 				window.is1200 = true;
 			}
-			else if(w.width() > 768 && window.is768)
+			else if(w.width() >= 768 && window.is768)
 			{
 				for(i=0;i<Tracks.length;i++)
 				{
@@ -143,7 +143,7 @@ $(function() {
 				}
 				window.is768 = false;
 			}
-			else if(w.width() > 992 && window.is992)
+			else if(w.width() >= 992 && window.is992)
 			{
 				for(i=0;i<Tracks.length;i++)
 				{
@@ -153,7 +153,7 @@ $(function() {
 				}
 				window.is992 = false;
 			}
-			else if(w.width() > 1200 && window.is1200)
+			else if(w.width() >= 1200 && window.is1200)
 			{
 				for(i=0;i<Tracks.length;i++)
 				{
