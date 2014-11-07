@@ -101,17 +101,25 @@ $(function() {
 
 		w = $(window);
 		w.resize(function() {
-			var i;
+			var i,width;
 			if(w.width() <= 992 && !window.is992)
 			{
 				for(i=0;i<Tracks.length;i++)
+				{
+					width = Tracks.models[0].view.$el.find(".track-controls-container").width();
+					Tracks.models[0].view.$el.find(".track-controls-container canvas").css({width:width});
 					Tracks.models[i].waveform.redrawCstm();
+				}
 				window.is992 = true;
 			}
 			else if(w.width() <= 768 && !window.is768)
 			{
 				for(i=0;i<Tracks.length;i++)
+				{
+					width = Tracks.models[0].view.$el.find(".track-controls-container").width();
+					Tracks.models[0].view.$el.find(".track-controls-container canvas").css({width:width});
 					Tracks.models[i].waveform.redrawCstm();
+				}
 				window.is768 = true;
 			}
 			else if(w.width() > 992)
