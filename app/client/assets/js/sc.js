@@ -1,34 +1,9 @@
 window._Track = Backbone.Model.extend({
-	initialize:function()
-	{
-		var attrs,id;
-		var options = {};
-		attrs = this.toJSON();
-		id = attrs.oid;
-		
-		var $element = $("#"+attrs.oid);
-		var waveform = new Waveform({container:$element.find(".waveform")[0],innerColor:"#555",height:60,croppe:true});
-		waveform.dataFromSoundCloudTrack({waveform_url:$element.find(".waveform").attr("data-url")});
-		var soundoptions = waveform.optionsForSyncedStream();
-
-		options.id = attrs.id;
-		options.url = attrs.track_url;
-		options.whileplaying = soundoptions.whileplaying;
-		options.whileloading = soundoptions.whileloading;
-
-		var sound = soundManager.createSound(options);
-		sound.model = this;
-
-		this.el = "#"+id;
-		this.view = new Track_Waveform(this);
-		this.waveform = waveform;
-		this.sound = sound;
-	},
 	validate:function(attributes)
 	{
-		if(!attributes.id)
+		if(!attributes.oid)
 			return "El modelo necesita la propiedad de 'oid', este  es el id del track de soundcloud";
-		else if(!attributes.element)
+		else if(!attributes.id)
 			return "El modelo necesita la propiedad de 'id'";
 		else if(!attributes.waveform_url)
 			return "El modelo necesita la propiedad de 'waveform_url', este es la url del waveform del track de soundlcoud";
@@ -70,7 +45,28 @@ window._Tracks = Backbone.Collection.extend({
 });
 var createWaveform = function(track)
 {
-	console.log(track);
+	var options = {};
+	var _track = track;
+	var attrs = _track.toJSON();
+	var id = attrs.oid;
+	
+	var $element = $("#"+attrs.oid);
+	var waveform = new Waveform({container:$element.find(".waveform")[0],innerColor:"#555",height:60,croppe:true});
+	waveform.dataFromSoundCloudTrack({waveform_url:$element.find(".waveform").attr("data-url")});
+	var soundoptions = waveform.optionsForSyncedStream();
+
+	options.id = attrs.id;
+	options.url = attrs.track_url;
+	options.whileplaying = soundoptions.whileplaying;
+	options.whileloading = soundoptions.whileloading;
+
+	var sound = soundManager.createSound(options);
+	sound.model = _track;
+
+	_track.el = "#"+id;
+	_track.view = new Track_Waveform(_track);
+	_track.waveform = waveform;
+	_track.sound = sound;
 };
 var createSound = function(element)
 {
