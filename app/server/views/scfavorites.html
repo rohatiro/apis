@@ -1,0 +1,21 @@
+{% extends "./soundcloud.html" %}
+{% block body %}
+{% for fav in favorites %}
+	<article class='track' id='{{ fav.id }}'>
+		<figure class='track-artwork-container'>
+			<a class='track-artwork-link' href='#'>
+				<img class='track-artwork-img' src='{% if fav.artwork_url %} {{fav.artwork_url}} {% else %} {{fav.user.avatar_url}} {% endif %}' />
+			</a>
+		</figure>
+		<div class='track-controls-container'>
+			<div class="track-title-container">
+				<span class="track-title">{{fav.title}}</span>
+			</div>
+			<div class='track-controls'>
+				<a href="javascript:void(0)" class='btn play'></a href='#'>
+			</div>
+			<div class='waveform' data-url="{{ fav.waveform_url }}"></div>
+		</div>
+	</article>
+{% endfor %}
+{% endblock %}

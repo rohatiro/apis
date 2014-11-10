@@ -18,7 +18,7 @@ var soundcloud = function(req,res) {
 		{
 			var json = JSON.parse(body);
 			if (json.error) res.render("soundcloud",{error:true});
-			res.render("soundcloud",{user:req.user,favorites:json});
+			res.render("scfavorites",{user:req.user,favorites:json});
 		}
 		catch(ex)
 		{
@@ -28,7 +28,6 @@ var soundcloud = function(req,res) {
 };
 
 var github = function(req,res) {
-	console.log(req.user.repos_url);
 	request({
 		method:"GET",
 		url:req.user.repos_url,
@@ -69,6 +68,10 @@ var scconnect = function(req,res) {
 	}
 	query = query.slice(0,query.length-1);
 	req.pipe(request("https://soundcloud.com/connect"+query)).pipe(res);
+};
+
+var player = function(req,res) {
+	res.render("scplayer",{user:req.user});
 };
 
 module.exports = {

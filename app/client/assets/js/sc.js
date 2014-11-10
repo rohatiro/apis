@@ -82,11 +82,14 @@ var createSound = function(element)
 	attrs.waveform_url = $element.find(".waveform").attr("data-url");
 	attrs.track_url = uri;
 
-	var sound = Tracks.add(attrs);
+	var sound = Tracks.add(attrs,{validate:true});
 	return sound;
 };
 window.Tracks = new _Tracks();
 window.Tracks.on("add",createWaveform);
+window.Tracks.on("invalid",function(coll, error) {
+	console.log(error);
+});
 $(function() {
 	soundManager.onready(function() {
 		var $tracks;
