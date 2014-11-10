@@ -3,7 +3,7 @@ window._Track = Backbone.Model.extend({
 	{
 		var attrs,id;
 		var options = {};
-		attrs = track.toJSON();
+		attrs = this.toJSON();
 		id = attrs.oid;
 		
 		var $element = $("#"+attrs.oid);
