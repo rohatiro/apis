@@ -1,8 +1,11 @@
 window._Track = Backbone.Model.extend({
 	initialize:function()
 	{
+		var attrs,id;
 		var options = {};
-		var attrs = this.toJSON();
+		attrs = track.toJSON();
+		id = attrs.oid;
+		
 		var $element = $("#"+attrs.oid);
 		var waveform = new Waveform({container:$element.find(".waveform")[0],innerColor:"#555",height:60,croppe:true});
 		waveform.dataFromSoundCloudTrack({waveform_url:$element.find(".waveform").attr("data-url")});
@@ -16,6 +19,8 @@ window._Track = Backbone.Model.extend({
 		var sound = soundManager.createSound(options);
 		sound.model = this;
 
+		this.el = "#"+id;
+		this.view = new Track_Waveform(this);
 		this.waveform = waveform;
 		this.sound = sound;
 	},
@@ -65,11 +70,7 @@ window._Tracks = Backbone.Collection.extend({
 });
 var createWaveform = function(track)
 {
-	var attrs,id;
-	attrs = track.toJSON();
-	id = attrs.oid;
-	track.el = "#"+id;
-	track.view = new Track_Waveform(track);
+	console.log(track);
 };
 var createSound = function(element)
 {
