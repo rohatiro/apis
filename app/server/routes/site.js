@@ -81,6 +81,6 @@ module.exports = {
 	github:github,
 	stream:stream,
 	waveform:waveform,
-	scconnect:scconnect
+	scconnect:scconnect,
 	player:player
 };
