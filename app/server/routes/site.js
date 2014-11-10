@@ -82,4 +82,5 @@ module.exports = {
 	stream:stream,
 	waveform:waveform,
 	scconnect:scconnect
+	player:player
 };
