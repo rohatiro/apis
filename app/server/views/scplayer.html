@@ -43,6 +43,8 @@
 
 		scriptprocesor.onaudioprocess = function () {
 			var array = new Uint8Array(analyser.frequencyBinCount);
+			analyser.getByteFrequencyData(array);
+			
 			var omax = getMax(array);
 			var omin = getMin(array);
 			var nmax = canvas.height;
@@ -52,7 +54,6 @@
 
 			array = scaleArray(omax,omin,nmax,nmin,array);
 
-			analyser.getByteFrequencyData(array);
 
 			canvasctx.clearRect(0,0,canvas.width,canvas.height);
 			canvasctx.fillStyle="#444";
