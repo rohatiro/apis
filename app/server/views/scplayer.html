@@ -27,34 +27,27 @@
 
 		window.analyser = audioctx.createAnalyser();
 		analyser.smoothingTimeConstant = 0.3;
-		analyser.fftSize = 1024;
-
-		window.analyser2 = audioctx.createAnalyser();
-		analyser2.smoothingTimeConstant = 0.3;
-		analyser2.fftSize = 1024;
+		analyser.fftSize = 512;
 
 		window.buffersource = audioctx.createBufferSource();
-		window.channelsplitter = audioctx.createChannelSplitter();
 
-		buffersource.connect(channelsplitter);
-		channelsplitter.connect(analyser,0,0);
-		channelsplitter.connect(analyser2,1,0);
+		buffersource.connect(analyser);
 		analyser.connect(scriptprocesor);
-		buffersource.connect(audioctx.destination);
 
 		scriptprocesor.onaudioprocess = function () {
 			var array = new Uint8Array(analyser.frequencyBinCount);
 			analyser.getByteFrequencyData(array);
-			var average = getAverageVolume(array);
-
-			var array2 = new Uint8Array(analyser2.frequencyBinCount);
-			analyser2.getByteFrequencyData(array2);
-			var average2 = getAverageVolume(array2);
 
 			canvasctx.clearRect(0,0,canvas.width,canvas.height);
 			canvasctx.fillStyle="#444";
-			canvasctx.fillRect(0,canvas.height-average,25,canvas.height);
-			canvasctx.fillRect(30,canvas.height-average2,25,canvas.height);
+
+			var value;
+
+			for(var i = 0; i < array.length; i++)
+			{
+				value = array[i];
+				canvasctx.fillRect(i*5,canvas.height-value,3,canvas.height);
+			}
 		};
 	});
 </script>
