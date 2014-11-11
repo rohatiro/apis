@@ -1,3 +1,63 @@
 {% extends "./soundcloud.html" %}
+{% block headscripts %}
+<script type="text/javascript">
+	getAverageVolume = function(array) {
+		var values = 0;
+		var length = array.length;
+		for(var i = 0; i < length; i++) {
+			values+=array[i];
+		}
+		var average=values/length;
+		return average;
+	}
+	$(function() {
+		var $body = $("#gh-body");
+		window.canvas = document.createElement("canvas");
+
+		canvas.width = $body.width();
+		canvas.height = 100;
+
+		$body.html(canvas);
+		
+		window.canvasctx = canvas.getContext("2d");
+		window.audioctx = new AudioContext();
+		window.scriptprocesor = audioctx.createScriptProcessor(2048,1,1);
+
+		scriptprocesor.connect(audioctx.destination);
+
+		window.analyser = audioctx.createAnalyser();
+		analyser.smoothingTimeConstant = 0.3;
+		analyser.fftSize = 1024;
+
+		window.analyser2 = audioctx.createAnalyser();
+		analyser2.smoothingTimeConstant = 0.3;
+		analyser2.fftSize = 1024;
+
+		window.buffersource = audioctx.createBufferSource();
+		window.channelsplitter = audioctx.createChannelSplitter();
+
+		buffersource.connect(channelsplitter);
+		channelsplitter.connect(analyser,0,0);
+		channelsplitter.connect(analyser2,1,0);
+		analyser.connect(scriptprocesor);
+		buffersource.connect(audioctx.destination);
+
+		scriptprocesor.onaudioprocess = function () {
+			var array = new Uint8Array(analyser.frequencyBinCount);
+			analyser.getByteFrequencyData(array);
+			var average = getAverageVolume(array);
+
+			var array2 = new Uint8Array(analyser2.frequencyBinCount);
+			analyser2.getByteFrequencyData(array2);
+			var average2 = getAverageVolume(array2);
+
+			canvasctx.clearRect(0,0,canvas.width,canvas.height);
+			canvasctx.fillStyle="#444";
+			canvasctx.fillRect(0,canvas.height-average,25,canvas.height);
+			canvasctx.fillRect(30,canvas.height-average2,25,canvas.height);
+		};
+	});
+</script>
+{% endblock %}
 {% block body %}
 {% endblock %}
