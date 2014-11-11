@@ -57,11 +57,12 @@
 			canvasctx.fillStyle="#444";
 
 			var value;
+			var bw = canvas.width / array.length;
 
 			for(var i = 0; i < array.length; i++)
 			{
 				value = array[i];
-				canvasctx.fillRect(i*5,canvas.height - value,3,value);
+				canvasctx.fillRect(i*bw,canvas.height - value,bw,value);
 			}
 		};
 	});
