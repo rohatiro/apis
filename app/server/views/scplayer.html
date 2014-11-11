@@ -18,7 +18,7 @@
 		return narray;
 	};
 	$(function() {
-		var $body = $("#gh-body");
+		var $body = $("#player");
 		window.canvas = document.createElement("canvas");
 
 		canvas.width = $body.width();
@@ -50,8 +50,6 @@
 			var nmax = canvas.height;
 			var nmin = 0;
 
-			console.log(omax,omin,nmax,nmin);
-
 			array = scaleArray(omax,omin,nmax,nmin,array);
 
 
@@ -70,4 +68,25 @@
 </script>
 {% endblock %}
 {% block body %}
+<article class="row">
+	<div class="col-xs-8" id="player">
+		
+	</div>
+	<div class="col-xs-4">
+	{% for fav in favorites %}
+		<div class='track' id='{{ fav.id }}'>
+			<figure class='track-artwork-container'>
+				<a class='track-artwork-link' href='#'>
+					<img class='track-artwork-img' src='{% if fav.artwork_url %} {{fav.artwork_url}} {% else %} {{fav.user.avatar_url}} {% endif %}' />
+				</a>
+			</figure>
+			<div class='track-controls-container'>
+				<div class="track-title-container">
+					<span class="track-title">{{fav.title}}</span>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+	</div>
+</article>
 {% endblock %}
