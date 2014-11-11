@@ -12,7 +12,7 @@
 		var nval;
 		for(var i = 0; i < array.length; i++)
 		{
-			nval = (((array[i]-omin)*(nmax-nmin))/(omax-omin))+nmin;
+			nval = (omax-omin) <= 0 ? 0 : (((array[i]-omin)*(nmax-nmin))/(omax-omin))+nmin;
 			narray.push(nval);
 		}
 		return narray;
