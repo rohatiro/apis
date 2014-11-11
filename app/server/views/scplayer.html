@@ -44,7 +44,7 @@
 		scriptprocesor.onaudioprocess = function () {
 			var array = new Uint8Array(analyser.frequencyBinCount);
 			analyser.getByteFrequencyData(array);
-			
+
 			var omax = getMax(array);
 			var omin = getMin(array);
 			var nmax = canvas.height;
@@ -63,7 +63,7 @@
 			for(var i = 0; i < array.length; i++)
 			{
 				value = array[i];
-				canvasctx.fillRect(i*5,canvas.height,3,value);
+				canvasctx.fillRect(i*5,canvas.height - value,3,value);
 			}
 		};
 	});
