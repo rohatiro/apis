@@ -37,7 +37,7 @@
 
 		window.analyser = audioctx.createAnalyser();
 		analyser.smoothingTimeConstant = 0.3;
-		analyser.fftSize = 512;
+		analyser.fftSize = 1024;
 
 		window.buffersource = audioctx.createBufferSource();
 		buffersource.connect(analyser);
