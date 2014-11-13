@@ -25,7 +25,7 @@
 		window.canvas = document.createElement("canvas");
 
 		canvas.width = $body.width();
-		canvas.height = 100;
+		canvas.height = 500;
 
 		$body.html(canvas);
 		
@@ -50,22 +50,32 @@
 
 			var omax = getMax(array);
 			var omin = getMin(array);
-			var nmax = canvas.height;
+			var nmax = 100;
 			var nmin = 0;
 
 			array = scaleArray(omax,omin,nmax,nmin,array);
-
-
 			canvasctx.clearRect(0,0,canvas.width,canvas.height);
-			canvasctx.fillStyle="#444";
+			canvasctx.beginPath();
+			canvasctx.arc(canvas.width/2,canvas.height/2,49,0,2*Math.PI,false);
+			canvasctx.lineWidth = 1;
+			canvasctx.strokeStyle = "#444";
+			canvasctx.closePath();
+			canvasctx.stroke();
 
-			var value;
-			var bw = canvas.width / array.length;
+			var value,x1,y1,x2,y2;
 
 			for(var i = 0; i < array.length; i++)
 			{
 				value = array[i];
-				canvasctx.fillRect(i*bw,canvas.height - value,bw,value);
+				x1 = (canvas.width/2) + (49*(Math.cos(((2*Math.PI)*i)/array.length)));
+				y1 = (canvas.height/2) + (49*(Math.sin(((2*Math.PI)*i)/array.length)));
+				x2 = x1 + (value*(Math.cos(((2*Math.PI)*i)/array.length)));
+				y2 = y1 + (value*(Math.sin(((2*Math.PI)*i)/array.length)));
+				canvasctx.beginPath();
+				canvasctx.moveTo(x1,y1);
+				canvasctx.lineTo(x2,y2)
+				canvasctx.closePath();
+				canvasctx.stroke();
 			}
 		};
 	});
