@@ -1,5 +1,7 @@
-var _Player = function(container) {
+var _Player = function(options) {
 	var self = this;
+	var _options = options;
+
 	self.getMax = function(array) {
 		return Math.max.apply(Math,array);
 	};
@@ -19,18 +21,16 @@ var _Player = function(container) {
 		return narray;
 	};
 
-	self.container = container;
+	self.container = _options.container;
 	var link = document.createElement("a");
 	link.href = "#";
 	self.canvas = document.createElement("canvas");
 	self.canvasctx = self.canvas.getContext("2d");
-	var width = self.container.offsetWidth < 100 ? 500 : self.container.offsetWidth;
-	var height = self.container.offsetHeight < 100 ? 500 : self.container.offsetHeight;
-	var divitions = 100;
+	
+	var width = _options.width || (self.container.offsetWidth < 100 ? 500 : self.container.offsetWidth);
+	var height = _options.height || (self.container.offsetHeight < 100 ? 500 : self.container.offsetHeight);
+	var divitions = _options.divitions || 100;
 	var divitioninitial = 0;
-
-	self.outerCircleRadius = (width > height ? height : width)/2;
-	self.innerCircleRadius = self.outerCircleRadius/2;
 
 	self.canvas.width = width;
 	self.canvas.height = height;
@@ -123,6 +123,9 @@ var _Player = function(container) {
 	self.scriptprocessor.onaudioprocess = function() {
 		var array = new Uint8Array(self.analyser.frequencyBinCount);
 		self.analyser.getByteFrequencyData(array);
+
+		self.outerCircleRadius = (self.canvas.width > self.canvas.height ? self.canvas.height : self.canvas.width)/2;
+		self.innerCircleRadius = self.outerCircleRadius/2;
 
 		var omax = self.getMax(array);
 		var omin = self.getMin(array);
@@ -241,5 +244,5 @@ _Player.prototype.pause = function() {
 };
 
 $(function() {
-	window.Player = new _Player(player);
+	window.Player = new _Player({container:player,height:400});
 });
