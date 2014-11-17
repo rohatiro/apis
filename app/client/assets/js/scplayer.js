@@ -36,7 +36,7 @@ var _Player = function(options) {
 	self.canvas.height = height;
 
 	link.appendChild(self.canvas);
-	container.appendChild(link);
+	self.container.appendChild(link);
 
 	self.stoped = false;
 	self.paused = false;
