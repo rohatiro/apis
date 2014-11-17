@@ -24,8 +24,8 @@ var _Player = function(container) {
 	link.href = "#";
 	self.canvas = document.createElement("canvas");
 	self.canvasctx = self.canvas.getContext("2d");
-	var width = self.container.offsetWidth || 500;
-	var height = self.container.offsetHeight || 500;
+	var width = self.container.offsetWidth < 100 ? 500 : self.container.offsetWidth;
+	var height = self.container.offsetHeight < 100 ? 500 : self.container.offsetHeight;
 	var divitions = 100;
 	var divitioninitial = 0;
 
