@@ -21,9 +21,10 @@ var _Player = function(options) {
 		return narray;
 	};
 
-	self.container = _options.container;
 	var link = document.createElement("a");
 	link.href = "#";
+
+	self.container = _options.container;
 	self.canvas = document.createElement("canvas");
 	self.canvasctx = self.canvas.getContext("2d");
 	
@@ -36,11 +37,12 @@ var _Player = function(options) {
 	self.canvas.height = height;
 
 	link.appendChild(self.canvas);
-	self.container.appendChild(link);
+	self.container.appendChild(link);	
 
 	self.stoped = false;
 	self.paused = false;
 	self.played = false;
+	self.playing = false;
 	self.error = false;
 	self.loading = false;
 
@@ -68,56 +70,170 @@ var _Player = function(options) {
 		}
 	});
 
-	self.audio.onloadedmetadata = function() {
-		self.stoped = true;
-		self.paused = false;
-		self.played = false;
-		self.error = false;
-		self.loading = false;
+	var count = 0;
+
+	self.audioevents = {
+		onloadedmetadata: function() {
+			self.stoped = true;
+			self.paused = false;
+			self.played = false;
+			self.error = false;
+			self.loading = false;
+		},
+		onloadstart: function() {
+			self.stoped = false;
+			self.paused = false;
+			self.played = false;
+			self.error = false;
+			self.loading = true;
+			self.playing = false;
+			divitioninitial = 0;
+		},
+		onplaying: function() {
+			self.stoped = false;
+			self.paused = false;
+			self.played = true;
+			self.error = false;
+			self.loading = false;
+		},
+		onpause: function() {
+			self.stoped = false;
+			self.paused = true;
+			self.played = false;
+			self.error = false;
+			self.loading = false;
+		},
+		onended: function() {
+			self.stoped = true;
+			self.paused = false;
+			self.played = false;
+			self.error = false;
+			self.loading = false;
+		},
+		onerror: function() {
+			self.stoped = false;
+			self.paused = false;
+			self.played = false;
+			self.error = true;
+			self.loading = false;
+
+			var currenttime = self.audio.currentTime;
+
+			self.audio.load();
+			self.audio.currentTime = currenttime;
+			self.audio.play();
+		},
+		ontimeupdate: function() {
+			self.playing = true;
+		}
 	};
 
-	self.audio.onloadstart = function() {
-		self.stoped = false;
-		self.paused = false;
-		self.played = false;
-		self.error = false;
-		self.loading = true;
-		divitioninitial = 0;
+	$.extend(self.audio,self.audioevents);
+
+	self.drawPlayButton = function(context,x0,y0,radius) {
+		context.beginPath();
+		context.fillStyle = "#0AA2CF";
+		context.moveTo((x0 - radius)+((2*radius)/3),(y0 - radius)+(2*radius)/3);
+		context.lineTo((x0 - radius)+((2*radius)/3),(y0 - radius)+(2*(2*radius))/3);
+		context.lineTo((x0 - radius) + ((3*(2*radius))/4),(y0 - radius)+(2*radius)/2);
+		context.lineTo((x0 - radius) + ((2*radius)/3),(y0 - radius)+(2*radius)/3);
+		context.fill();
+		context.closePath();
 	};
 
-	self.audio.onplaying = function() {
-		self.stoped = false;
-		self.paused = false;
-		self.played = true;
-		self.error = false;
-		self.loading = false;
+	self.drawPauseButton = function(context,x0,y0,radius) {
+		context.beginPath();
+		context.fillStyle = "#0AA2CF";
+		context.fillRect((x0 - radius)+((2*radius)/4),(y0 - radius)+((2*radius)/4),(2*radius)/6,(2*radius)/2);
+		context.fillRect((x0 - radius)+((7*(2*radius))/12),(y0 - radius)+((2*radius)/4),(2*radius)/6,(2*radius)/2);
+		context.closePath();
 	};
-	self.audio.onpause = function() {
-		self.stoped = false;
-		self.paused = true;
-		self.played = false;
-		self.error = false;
-		self.loading = false;
-	};
-	self.audio.onended = function() {
-		self.stoped = true;
-		self.paused = false;
-		self.played = false;
-		self.error = false;
-		self.loading = false;
-	};
-	self.audio.onerror = function() {
-		self.stoped = false;
-		self.paused = false;
-		self.played = false;
-		self.error = true;
-		self.loading = false;
 
-		var currenttime = self.audio.currentTime;
+	self.drawInnerCircle = function(context,x0,y0,radius) {
+		context.beginPath();
+		context.fillStyle = "#0AA2CF";
+		context.moveTo(x0,y0);
+		context.arc(x0,y0,radius,0,2*Math.PI,false);
+		context.fill();
+		context.closePath();
 
-		self.audio.load();
-		self.audio.currentTime = currenttime;
-		self.audio.play();
+		context.beginPath();
+		context.fillStyle = "#FFFFFF";
+		context.arc(x0,y0,radius-((2*radius)*0.02),0,2*Math.PI,false);
+		context.fill();
+		context.closePath();
+	};
+
+	self.drawFrequencyBars = function(context,x0,y0,radius,value,frecbarrs,frecbarrslenght) {
+		var x1,x2,x3,y1,y2,y3;
+
+		x1 = x0 + (radius*(Math.cos(((2*Math.PI)*frecbarrs)/frecbarrslenght)));
+		y1 = y0 + (radius*(Math.sin(((2*Math.PI)*frecbarrs)/frecbarrslenght)));
+		
+		x2 = x1 + (value*(Math.cos(((2*Math.PI)*frecbarrs)/frecbarrslenght)));
+		y2 = y1 + (value*(Math.sin(((2*Math.PI)*frecbarrs)/frecbarrslenght)));
+		
+		x3 = x1 + (radius*(Math.cos(((2*Math.PI)*frecbarrs)/frecbarrslenght)));
+		y3 = y1 + (radius*(Math.sin(((2*Math.PI)*frecbarrs)/frecbarrslenght)));
+		
+		var lineGrad = context.createLinearGradient(x1,y1,x3,y3);
+		lineGrad.addColorStop(0,"#0f0");
+		lineGrad.addColorStop(0.5,"#ff0");
+		lineGrad.addColorStop(1,"#f00");
+
+		context.beginPath();
+		context.moveTo(x1,y1);
+		context.lineTo(x2,y2);
+		context.strokeStyle = lineGrad;
+		context.closePath();
+		context.stroke();
+	};
+
+	self.drawLoadingCircle = function(context,x0,y0,radius) {
+		var x1,y1;
+		x1 = x0 + ((radius-((2*radius)*0.02))*(Math.cos(((2*Math.PI)*(divitioninitial+13))/divitions)));
+		y1 = y0 + ((radius-((2*radius)*0.02))*(Math.sin(((2*Math.PI)*(divitioninitial+13))/divitions)));
+
+		var circleGradient = context.createRadialGradient(x1,y1,((2*radius)*0.01),x1,y1,((2*radius)*0.12));
+		circleGradient.addColorStop(0,"#FCF7FD");
+		circleGradient.addColorStop(1/7,"#D6F5FD");
+		circleGradient.addColorStop(2/7,"#ACE6FD");
+		circleGradient.addColorStop(3/7,"#8FDDFF");
+		circleGradient.addColorStop(4/7,"#3BC8F4");
+		circleGradient.addColorStop(5/7,"#1EC1F6");
+		circleGradient.addColorStop(6/7,"#33738D");
+		circleGradient.addColorStop(1,"#666");
+
+		context.beginPath();
+		context.fillStyle = circleGradient;
+		context.moveTo(x0,y0);
+		context.arc(x0,y0,radius,0,2*Math.PI,false);
+		context.fill();
+		context.closePath();
+
+		context.beginPath();
+		context.fillStyle = "#FFFFFF";
+		context.arc(x0,y0,radius-((2*radius)*0.04),0,2*Math.PI,false);
+		context.fill();
+		context.closePath();
+	};
+
+	self.drawProgressBar = function(context,x0,y0,radius,progress) {
+		context.beginPath();
+		context.fillStyle = "#0098C5";
+		context.moveTo(x0,y0);
+		context.arc(x0,y0,radius-((2*radius)*0.02),0,progress,false);
+		context.fill();
+		context.closePath();
+
+		context.beginPath();
+		context.fillStyle = "#FFFFFF";
+		context.strokeStyle = "#0098C5";
+		context.lineWidth = 1;
+		context.arc(x0,y0,radius-((2*radius)*0.04),0,2*Math.PI,false);
+		context.fill();
+		context.stroke();
+		context.closePath();
 	};
 
 	self.scriptprocessor.onaudioprocess = function() {
@@ -133,97 +249,36 @@ var _Player = function(options) {
 		var nmin = 0;
 		var x0 = self.canvas.width/2;
 		var y0 = self.canvas.height/2;
-		var circleGradient,x1,y1;
+		var value;
+		var progress;
 
 		array = self.scaleArray(omax,omin,nmax,nmin,array);
 		self.canvasctx.clearRect(0,0,self.canvas.width,self.canvas.height);
 
 		if(self.loading) {
-			x1 = x0 + ((self.innerCircleRadius-((2*self.innerCircleRadius)*0.02))*(Math.cos(((2*Math.PI)*(divitioninitial+13))/divitions)));
-			y1 = y0 + ((self.innerCircleRadius-((2*self.innerCircleRadius)*0.02))*(Math.sin(((2*Math.PI)*(divitioninitial+13))/divitions)));
-
-			circleGradient = self.canvasctx.createRadialGradient(x1,y1,((2*self.innerCircleRadius)*0.01),x1,y1,((2*self.innerCircleRadius)*0.12));
-			circleGradient.addColorStop(0,"#FCF7FD");
-			circleGradient.addColorStop(1/7,"#D6F5FD");
-			circleGradient.addColorStop(2/7,"#ACE6FD");
-			circleGradient.addColorStop(3/7,"#8FDDFF");
-			circleGradient.addColorStop(4/7,"#3BC8F4");
-			circleGradient.addColorStop(5/7,"#1EC1F6");
-			circleGradient.addColorStop(6/7,"#33738D");
-			circleGradient.addColorStop(1,"#666");
-
-			self.canvasctx.beginPath();
-			self.canvasctx.fillStyle = circleGradient;
-			self.canvasctx.moveTo(x0,y0);
-			self.canvasctx.arc(x0,y0,self.innerCircleRadius,0,2*Math.PI,false);
-			self.canvasctx.fill();
-			self.canvasctx.closePath();
-
-			self.canvasctx.beginPath();
-			self.canvasctx.fillStyle = "#FFFFFF";
-			self.canvasctx.arc(x0,y0,self.innerCircleRadius-((2*self.innerCircleRadius)*0.04),0,2*Math.PI,false);
-			self.canvasctx.fill();
-			self.canvasctx.closePath();
+			self.drawLoadingCircle(self.canvasctx,x0,y0,self.innerCircleRadius);
 		} else {
-			self.canvasctx.beginPath();
-			self.canvasctx.fillStyle = "#0AA2CF";
-			self.canvasctx.moveTo(x0,y0);
-			self.canvasctx.arc(x0,y0,self.innerCircleRadius,0,2*Math.PI,false);
-			self.canvasctx.fill();
-			self.canvasctx.closePath();
-
-			self.canvasctx.beginPath();
-			self.canvasctx.fillStyle = "#FFFFFF";
-			self.canvasctx.arc(x0,y0,self.innerCircleRadius-((2*self.innerCircleRadius)*0.02),0,2*Math.PI,false);
-			self.canvasctx.fill();
-			self.canvasctx.closePath();
-
+			self.drawInnerCircle(self.canvasctx,x0,y0,self.innerCircleRadius);
+			if(self.playing)
+			{
+				progress = (2*Math.PI/self.audio.duration)*self.audio.currentTime;
+				self.drawProgressBar(self.canvasctx,x0,y0,self.innerCircleRadius,progress);
+			}
 			if(!self.played || self.stoped)
 			{
-				self.canvasctx.beginPath();
-				self.canvasctx.fillStyle = "#0AA2CF";
-				self.canvasctx.moveTo((x0 - self.innerCircleRadius)+((2*self.innerCircleRadius)/3),(y0 - self.innerCircleRadius)+(2*self.innerCircleRadius)/3);
-				self.canvasctx.lineTo((x0 - self.innerCircleRadius)+((2*self.innerCircleRadius)/3),(y0 - self.innerCircleRadius)+(2*(2*self.innerCircleRadius))/3);
-				self.canvasctx.lineTo((x0 - self.innerCircleRadius) + ((3*(2*self.innerCircleRadius))/4),(y0 - self.innerCircleRadius)+(2*self.innerCircleRadius)/2);
-				self.canvasctx.lineTo((x0 - self.innerCircleRadius) + ((2*self.innerCircleRadius)/3),(y0 - self.innerCircleRadius)+(2*self.innerCircleRadius)/3);
-				self.canvasctx.fill();
-				self.canvasctx.closePath();
+				self.drawPlayButton(self.canvasctx,x0,y0,self.innerCircleRadius);
 			} else if(!self.paused) {
-				self.canvasctx.beginPath();
-				self.canvasctx.fillStyle = "#0AA2CF";
-				self.canvasctx.fillRect((x0 - self.innerCircleRadius)+((2*self.innerCircleRadius)/4),(y0 - self.innerCircleRadius)+((2*self.innerCircleRadius)/4),(2*self.innerCircleRadius)/6,(2*self.innerCircleRadius)/2);
-				self.canvasctx.fillRect((x0 - self.innerCircleRadius)+((7*(2*self.innerCircleRadius))/12),(y0 - self.innerCircleRadius)+((2*self.innerCircleRadius)/4),(2*self.innerCircleRadius)/6,(2*self.innerCircleRadius)/2);
-				self.canvasctx.closePath();
+				self.drawPauseButton(self.canvasctx,x0,y0,self.innerCircleRadius);
 			}
 		}
 
 		if(divitions === divitioninitial) divitioninitial = 0;
 		divitioninitial++;
 
-		var value,x1,y1,x2,y2,x3,y3,lineGrad;
-
 		for(var i = 0; i < array.length; i++)
 		{
 			value = array[i];
-			y1 = (self.canvas.height/2) + ((self.innerCircleRadius)*(Math.sin(((2*Math.PI)*i)/array.length)));
-			x1 = (self.canvas.width/2) + ((self.innerCircleRadius)*(Math.cos(((2*Math.PI)*i)/array.length)));
-			y2 = y1 + (value*(Math.sin(((2*Math.PI)*i)/array.length)));
-			x2 = x1 + (value*(Math.cos(((2*Math.PI)*i)/array.length)));
-			y3 = y1 + (self.innerCircleRadius*(Math.sin(((2*Math.PI)*i)/array.length)));
-			x3 = x1 + (self.innerCircleRadius*(Math.cos(((2*Math.PI)*i)/array.length)));
-			
-			lineGrad = self.canvasctx.createLinearGradient(x1,y1,x3,y3);
-			lineGrad.addColorStop(0,"#0f0");
-			lineGrad.addColorStop(0.5,"#ff0");
-			lineGrad.addColorStop(1,"#f00");
-
-			//Dibujar lineas de frecuencia
-			self.canvasctx.beginPath();
-			self.canvasctx.moveTo(x1,y1);
-			self.canvasctx.lineTo(x2,y2);
-			self.canvasctx.strokeStyle = lineGrad;
-			self.canvasctx.closePath();
-			self.canvasctx.stroke();
+			self.drawFrequencyBars(self.canvasctx,x0,y0,self.innerCircleRadius,value,i,array.length);
 		}
 	};
 
