@@ -80,7 +80,7 @@ var player = function(req,res) {
 		{
 			var json = JSON.parse(body);
 			if (json.error) res.render("soundcloud",{error:true});
-			res.render("scplayer",{user:req.user,favorites:json,proc:process.env});
+			res.render("scplayer",{user:req.user,favorites:json});
 		}
 		catch(ex)
 		{

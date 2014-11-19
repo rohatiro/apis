@@ -1,5 +1,5 @@
 module.exports = function(server) {
-	var bodyparser,swig,express,routes,config,githubAPI,session,logger;
+	var bodyparser,swig,express,routes,config,githubAPI,session,logger,extend;
 
 	express = require("express");
 	session = require("express-session");
@@ -8,6 +8,11 @@ module.exports = function(server) {
 	logger = require("morgan");
 	routes = require("./routes");
 	config = require("./config")();
+	extend = require("util")._extend;
+
+	if(process.env.APIS_ENV==="development")
+		extend(process.env,require(config.settings));
+
 	githubAPI = require(config.apis)();
 
 	server.engine("html", swig.renderFile);

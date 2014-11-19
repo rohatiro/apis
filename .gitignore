@@ -3,3 +3,4 @@ app/client/assets/bcomponents/
 app/client/assets/css/
 *.sublime-project
 *.sublime-workspace
+settings.json

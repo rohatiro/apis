@@ -3,7 +3,7 @@ module.exports = function() {
 	
 	path = require("path");
 
-	var rootdir,appdir,clientdir,serverdir,assetsdir,routesdir,apisdir,viewsdir;
+	var rootdir,appdir,clientdir,serverdir,assetsdir,routesdir,apisdir,viewsdir,settings;
 
 	rootdir = path.resolve(__dirname,"./../../../");
 	appdir = path.resolve(rootdir,"./app");
@@ -13,6 +13,7 @@ module.exports = function() {
 	routesdir = path.resolve(serverdir,"./routes");
 	apisdir = path.resolve(serverdir,"./apis");
 	viewsdir = path.resolve(serverdir,"./views");
+	settings = path.resolve(rootdir,"./settings.json");
 
 	return {
 		root:rootdir,
@@ -22,6 +23,7 @@ module.exports = function() {
 		assets:assetsdir,
 		routes:routesdir,
 		apis:apisdir,
-		views: viewsdir
+		views: viewsdir,
+		settings:settings
 	};
 };
