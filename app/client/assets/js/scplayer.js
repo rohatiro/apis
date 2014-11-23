@@ -236,7 +236,7 @@ var _Player = function(options) {
 		context.closePath();
 	};
 
-	self.scriptprocessor.onaudioprocess = function() {
+	self.drawPlayer = function() {
 		var array = new Uint8Array(self.analyser.frequencyBinCount);
 		self.analyser.getByteFrequencyData(array);
 
@@ -254,6 +254,11 @@ var _Player = function(options) {
 
 		array = self.scaleArray(omax,omin,nmax,nmin,array);
 		self.canvasctx.clearRect(0,0,self.canvas.width,self.canvas.height);
+
+		self.canvasctx.beginPath();
+		self.canvasctx.fillStyle = "#1b1b1b";
+		self.canvasctx.fillRect(0,0,self.canvas.width,self.canvas.height);
+		self.canvasctx.closePath();
 
 		if(self.loading) {
 			self.drawLoadingCircle(self.canvasctx,x0,y0,self.innerCircleRadius);
@@ -282,6 +287,8 @@ var _Player = function(options) {
 		}
 	};
 
+	self.scriptprocessor.onaudioprocess = self.drawPlayer;
+
 	return this;
 };
 
@@ -300,4 +307,9 @@ _Player.prototype.pause = function() {
 
 $(function() {
 	window.Player = new _Player({container:player,height:400});
+	$(window).on("resize",function() {
+		var width = $(Player.container).width();
+		Player.canvas.width = width;
+		Player.drawPlayer();
+	})
 });

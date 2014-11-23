@@ -3,28 +3,57 @@
 	<link rel="stylesheet" type="text/css" href="/css/scplayer.css" />
 {% endblock %}
 {% block headscripts %}
+<script type="text/javascript" src="/bcomponents/jquery-ui/jquery-ui.js"></script>
 <script type="text/javascript" src="/js/scplayer.js"></script>
+<script type="text/javascript" src="/js/scplaylist.js"></script>
 {% endblock %}
 {% block body %}
 <article class="row">
-	<div class="col-xs-8">
+	<div class="col-md-8">
 		<div id="player"></div>
+		<div id="playlist"></div>
 	</div>
-	<div class="col-xs-4">
-	{% for fav in favorites %}
-		<div class='track' id='{{ fav.id }}'>
-			<figure class='track-artwork-container'>
-				<a class='track-artwork-link' href='#'>
-					<img class='track-artwork-img' src='{% if fav.artwork_url %} {{fav.artwork_url}} {% else %} {{fav.user.avatar_url}} {% endif %}' />
-				</a>
-			</figure>
-			<div class='track-controls-container'>
-				<div class="track-title-container">
-					<span class="track-title">{{fav.title}}</span>
+	<div class="col-md-4 tabs">
+		<ul class="nav nav-tabs">
+			<!-- <li class="col-xs-4 tab tab-favorites"> -->
+			<li>
+				<!-- <a href="#tab-favorites" class="tab-label">Favorites</a> -->
+				<a href="#tab-favorites">Favorites</a>
+			</li>
+			<!-- <li class="col-xs-4 tab tab-playlist"> -->
+			<li>
+				<!-- <a href="#tab-playlist" class="tab-label">Playlists</a> -->
+				<a href="#tab-playlist">Playlists</a>
+			</li>
+			<!-- <li class="col-xs-4 tab tab-upload"> -->
+			<li>	
+				<!-- <a href="#tab-upload" class="tab-label">Upload</a> -->
+				<a href="#tab-upload">Upload</a>
+			</li>
+		</ul>
+		<div class="row tabs-container">
+			<div id="tab-favorites">
+				{% for fav in favorites %}
+				<div class="track" id="{{ fav.id }}">
+					<div class="track-dragcontoler"></div>
+					<div class="track-container">
+						<figure class="track-artwork-container">
+							<img src="{% if fav.artwork_url %}{{ fav.artwork_url }}{% else %}{{ fav.user.avatar_url }}{% endif %}" class="track-artwork-img">
+						</figure>
+						<div class="track-info-container">
+							<p class="track-title">{{ fav.title }}</p>
+						</div>
+					</div>
 				</div>
+				{% endfor %}
+			</div>
+			<div id="tab-playlist">
+				PLAYLIST
+			</div>
+			<div id="tab-upload">
+				UPLOAD
 			</div>
 		</div>
-	{% endfor %}
 	</div>
 </article>
 {% endblock %}

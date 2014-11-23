@@ -1,7 +1,40 @@
 #player
-  background #1b1b1b
+  margin-bottom 15px
+#playlist
+  border 1px solid #ddd
+  margin-bottom 15px
+  padding-top 15px
+  .track
+    .delete
+      background-color #eee
+      border-bottom 1px solid #ddd
+      border-left 1px solid #ddd
+      cursor pointer
+      display none
+      font-family 'apis'
+      font-size 0.7em
+      padding 5px
+      position absolute
+      right 0
+      top 0
+      &:before
+        content "\e604"
+    &:hover
+      .delete
+        display block
+.tabs-container
+  border-bottom 1px solid #eee
+  border-left 1px solid #eee
+  border-right 1px solid #eee
+  padding-top 15px
+.tab-label
+  display block
+  padding 10px 15px
+  text-align center
 .track
-  margin-bottom 10px
+  border 1px solid #ddd
+  margin 0 10px 10px 10px
+  position relative
   &:after
     clear both
     content " "
@@ -11,5 +44,16 @@
     visibility hidden
 .track-artwork-container
   float left
-.track-controls-container
-  margin 0 0 5px 105px
+  width 50px
+.track-artwork-img
+  width 100%
+.track-container
+  margin 0 0 5px 25px
+.track-dragcontoler
+  background-color #ddd
+  bottom 0
+  position absolute
+  top 0
+  width 20px
+.track-info-container
+  margin 0 0 5px 55px
