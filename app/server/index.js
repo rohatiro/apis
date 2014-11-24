@@ -29,5 +29,8 @@ module.exports = function(server) {
 
 	routes(server,githubAPI);
 
-	server.listen(process.env.PORT || 8000);
+	if(process.env.APIS_ENV==="development")
+		server.listen(8000);
+	else
+		server.listen(process.env.PORT || 8000);
 };

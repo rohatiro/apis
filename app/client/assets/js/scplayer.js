@@ -22,11 +22,13 @@ var _Player = function(options) {
 	};
 
 	var link = document.createElement("a");
-	link.href = "#";
+	link.href = "javascript:void(0);";
 
 	self.container = _options.container;
 	self.canvas = document.createElement("canvas");
 	self.canvasctx = self.canvas.getContext("2d");
+
+	self.playlist = [];
 	
 	var width = _options.width || (self.container.offsetWidth < 100 ? 500 : self.container.offsetWidth);
 	var height = _options.height || (self.container.offsetHeight < 100 ? 500 : self.container.offsetHeight);
@@ -37,7 +39,7 @@ var _Player = function(options) {
 	self.canvas.height = height;
 
 	link.appendChild(self.canvas);
-	self.container.appendChild(link);	
+	self.container.appendChild(link);
 
 	self.stoped = false;
 	self.paused = false;
@@ -59,18 +61,6 @@ var _Player = function(options) {
 	self.analyser.connect(self.scriptprocessor);
 	self.scriptprocessor.connect(self.audioctx.destination);
 	self.buffersource.connect(self.audioctx.destination);
-
-	link.addEventListener("click", function() {
-		if(self.stoped) {
-			self.play();
-		} else if(self.played) {
-			self.pause();
-		} else if(self.paused) {
-			self.play();
-		}
-	});
-
-	var count = 0;
 
 	self.audioevents = {
 		onloadedmetadata: function() {
@@ -104,11 +94,19 @@ var _Player = function(options) {
 			self.loading = false;
 		},
 		onended: function() {
-			self.stoped = true;
-			self.paused = false;
-			self.played = false;
-			self.error = false;
-			self.loading = false;
+			if(self.playlist.length > 0)
+			{
+				self.audio.src = self.playlist.pop();
+				self.audio.play();
+			}
+			else
+			{
+				self.stoped = true;
+				self.paused = false;
+				self.played = false;
+				self.error = false;
+				self.loading = false;
+			}
 		},
 		onerror: function() {
 			self.stoped = false;
@@ -294,11 +292,18 @@ var _Player = function(options) {
 
 _Player.prototype.addSrc = function(url) {
 	var self = this;
-	self.audio.src = url;
+	self.playlist.push(url);
 };
 
 _Player.prototype.play = function() {
-	this.audio.play();
+	if(this.playlist.length > 0 && !this.paused)
+	{
+		this.audio.src = this.playlist.pop();
+		this.audio.play();
+	} else
+	{
+		this.audio.play();
+	}
 };
 
 _Player.prototype.pause = function() {
