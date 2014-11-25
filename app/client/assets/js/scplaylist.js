@@ -23,7 +23,6 @@ $(function() {
 				cln = ui.draggable.clone().append("<div class='delete'></div>");
 				cln.appendTo(this);
 			}
-			console.log(1);
 		}
 	}).sortable({
 		items:".track",
@@ -39,5 +38,5 @@ $(function() {
 	$playlist.on("click",".delete",function(e) {
 		$e = $(e.target);
 		$e.parent().remove();
-	})
+	});
 });

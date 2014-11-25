@@ -1,6 +1,6 @@
 node_modules/
 app/client/assets/bcomponents/
-app/client/assets/css/
+app/client/assets/styl/*.css
 *.sublime-project
 *.sublime-workspace
 settings.json
