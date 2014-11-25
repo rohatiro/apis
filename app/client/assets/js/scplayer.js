@@ -4,7 +4,7 @@ var _Player = function(options) {
 
 	var link = document.createElement("a");
 	link.href = "#";
-	link.onclick = function() { return false; };
+	link.onclick = function() { self.play.call(self); return false; };
 
 	self.container = _options.container;
 	self.canvas = document.createElement("canvas");
@@ -29,6 +29,8 @@ var _Player = function(options) {
 	self.playing = false;
 	self.error = false;
 	self.loading = false;
+	self.playerstarted = false;
+	self.isPlaying = false;
 
 	self.audio = new Audio();
 	self.audioctx = new AudioContext();
@@ -83,6 +85,7 @@ var _Player = function(options) {
 			}
 			else
 			{
+				self.isPlaying = false;
 				self.stoped = true;
 				self.paused = false;
 				self.played = false;
@@ -302,13 +305,22 @@ _Player.prototype.addSrc = function(url) {
 };
 
 _Player.prototype.play = function() {
-	if(this.playlist.length > 0 && !this.paused)
+	if(this.playlist.length > 0 && !this.isPlaying)
 	{
+		this.isPlaying = true;
 		this.audio.src = this.playlist.pop();
 		this.audio.play();
-	} else
+	}
+	else
 	{
-		this.audio.play();
+		if(this.paused || this.stoped)
+		{
+			this.audio.play();
+		}
+		else
+		{
+			this.pause();
+		}
 	}
 };
 
@@ -316,11 +328,8 @@ _Player.prototype.pause = function() {
 	this.audio.pause();
 };
 
-$(function() {
-	window.Player = new _Player({container:player,height:400});
-	$(window).on("resize",function() {
-		var width = $(Player.container).width();
-		Player.canvas.width = width;
-		Player.drawPlayer();
-	});
+$(window).on("resize",function() {
+	var width = $(Player.container).width();
+	Player.canvas.width = width;
+	Player.drawPlayer();
 });

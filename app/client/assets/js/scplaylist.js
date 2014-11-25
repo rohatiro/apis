@@ -1,5 +1,7 @@
 var $playlist;
 $(function() {
+	window.Player = new _Player({container:player,height:400});
+	
 	var $tabs = $(".tabs");
 	$tabs.tabs({
 		active:0,
