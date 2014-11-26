@@ -59,17 +59,6 @@ var waveform = function(req,res) {
 	req.pipe(request(url+query)).pipe(res);
 };
 
-var scconnect = function(req,res) {
-	var params = req.query;
-	var query = "?";
-	for(var p in params)
-	{
-		query+=p+"="+params[p]+"&";
-	}
-	query = query.slice(0,query.length-1);
-	req.pipe(request("https://soundcloud.com/connect"+query)).pipe(res);
-};
-
 var player = function(req,res) {
 	var clientid = req._passport.instance._strategy("soundcloud")._oauth2._clientId;
 	request({
@@ -96,6 +85,5 @@ module.exports = {
 	github:github,
 	stream:stream,
 	waveform:waveform,
-	scconnect:scconnect,
 	player:player
 };

@@ -31,7 +31,6 @@ module.exports = function(server,passport) {
 	server.get("/soundcloud/player", isLoggeds, site.player);
 	server.get("/soundcloud/tracks/:id", site.stream);
 	server.get("/soundcloud/waveform", site.waveform);
-	server.get("/soundcloud/connect", site.scconnect);
 	server.get("/github",isLoggedg, site.github);
 	server.get("/github/login", passport.authenticate('github',{successRedirect:"/github",failureRedirect:"/"}));
 	server.get("/auth/github",passport.authenticate('github',{"scope":["user","repo"]}));
