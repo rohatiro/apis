@@ -10,21 +10,28 @@ var home = function(req,res) {
 
 var soundcloud = function(req,res) {
 	var clientid = req._passport.instance._strategy("soundcloud")._oauth2._clientId;
-	request({
-		method:"GET",
-		url:req.user.uri+"/favorites.json?client_id="+clientid,
-	},function(err,respond,body) {
-		try
-		{
-			var json = JSON.parse(body);
-			if (json.error) res.render("soundcloud",{error:true});
-			res.render("scfavorites",{user:req.user,favorites:json});
-		}
-		catch(ex)
-		{
-			res.render("soundcloud",{error:true});
-		}
-	});
+	if(req.user)
+	{
+		request({
+			method:"GET",
+			url:req.user.uri+"/favorites.json?client_id="+clientid,
+		},function(err,respond,body) {
+			try
+			{
+				var json = JSON.parse(body);
+				if (json.error) res.render("soundcloud",{error:true});
+				res.render("scfavorites",{user:req.user,favorites:json});
+			}
+			catch(ex)
+			{
+				res.render("soundcloud",{error:true});
+			}
+		});
+	}
+	else
+	{
+		res.render("soundcloud");
+	}
 };
 
 var github = function(req,res) {
@@ -61,21 +68,28 @@ var waveform = function(req,res) {
 
 var player = function(req,res) {
 	var clientid = req._passport.instance._strategy("soundcloud")._oauth2._clientId;
-	request({
-		method:"GET",
-		url:req.user.uri+"/favorites.json?client_id="+clientid,
-	},function(err,respond,body) {
-		try
-		{
-			var json = JSON.parse(body);
-			if (json.error) res.render("soundcloud",{error:true});
-			res.render("scplayer",{user:req.user,favorites:json});
-		}
-		catch(ex)
-		{
-			res.render("scplayer",{error:true});
-		}
-	});
+	if(req.user)
+	{
+		request({
+			method:"GET",
+			url:req.user.uri+"/favorites.json?client_id="+clientid,
+		},function(err,respond,body) {
+			try
+			{
+				var json = JSON.parse(body);
+				if (json.error) res.render("soundcloud",{error:true});
+				res.render("scplayer",{user:req.user,favorites:json});
+			}
+			catch(ex)
+			{
+				res.render("scplayer",{error:true});
+			}
+		});
+	}
+	else
+	{
+		res.render("scplayer");
+	}
 };
 
 module.exports = {

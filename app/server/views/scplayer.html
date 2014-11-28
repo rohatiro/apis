@@ -3,9 +3,10 @@
 	<link rel="stylesheet" type="text/css" href="/styl/scplayer.css" />
 {% endblock %}
 {% block headscripts %}
-<script type="text/javascript" src="/bcomponents/jquery-ui/jquery-ui.js"></script>
-<script type="text/javascript" src="/js/scplayer.js"></script>
-<script type="text/javascript" src="/js/scplaylist.js"></script>
+	<script type="text/javascript" src="/bcomponents/jquery-ui/jquery-ui.js"></script>
+	<script type="text/javascript" src="/js/scplayer.js"></script>
+	<script type="text/javascript" src="/js/scplaylist.js"></script>
+	<script type="text/javascript" src="/js/filereader.js"></script>
 {% endblock %}
 {% block body %}
 <article class="row">
@@ -33,6 +34,7 @@
 		</ul>
 		<div class="row tabs-container">
 			<div id="tab-favorites">
+				{% if favorites %}
 				{% for fav in favorites %}
 				<div class="track" id="{{ fav.id }}">
 					<div class="track-dragcontoler"></div>
@@ -46,12 +48,22 @@
 					</div>
 				</div>
 				{% endfor %}
+				{% else %}
+				<div>
+					<p>You need loggin for get the favorites tracks</p>
+				</div>
+				{% endif %}
 			</div>
 			<div id="tab-playlist">
+				{% if favorites %}
 				PLAYLIST
+				{% else %}
+				<div>
+					<p>You need loggin for get the playlists</p>
+				</div>
+				{% endif %}
 			</div>
 			<div id="tab-upload">
-				UPLOAD
 			</div>
 		</div>
 	</div>

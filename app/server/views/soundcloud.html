@@ -33,10 +33,14 @@
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li>
+						{% if user %}
 						<a id="user_name" href="{{ user.permalink_url }}">
 							<figure id="avatar"><img src="{{ user.avatar_url }}" alt="{{ user.full_name }}" /></figure>
 							<span>{{ user.username }}</span>
 						</a>
+						{% else %}
+						<a href="/auth/soundcloud" class="btn" id="loggin"><span>Log In</span></a>
+						{% endif %}
 					</li>
 				</ul>
 			</div>

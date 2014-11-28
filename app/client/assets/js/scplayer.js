@@ -214,17 +214,14 @@ _Player.prototype.drawProgressBar = function(context,x0,y0,radius,progress) {
 	context.beginPath();
 	context.fillStyle = "#0098C5";
 	context.moveTo(x0,y0);
-	context.arc(x0,y0,radius-((2*radius)*0.02),0,progress,false);
+	context.arc(x0,y0,radius-((2*radius)*0.04),0,progress,false);
 	context.fill();
 	context.closePath();
 
 	context.beginPath();
 	context.fillStyle = "#FFFFFF";
-	context.strokeStyle = "#0098C5";
-	context.lineWidth = 1;
-	context.arc(x0,y0,radius-((2*radius)*0.04),0,2*Math.PI,false);
+	context.arc(x0,y0,radius-((2*radius)*0.06),0,2*Math.PI,false);
 	context.fill();
-	context.stroke();
 	context.closePath();
 };
 
