@@ -2,41 +2,69 @@ var _Player = function(options) {
 	var self = this;
 	var _options = options;
 
+	//Generating status for the player
+	//blank: the player is initialized but no have songs to play
+	//play: the player is playing music
+	//pause: the player is in pause
+	//stop: the player has songs but this stopped
+	//loading: the player is loading a song
+	self.statusList = ["blank","play","pause","stop","loading"];
+
+	self.getStatusIndex = function(status)
+	{
+		if(!status) return -1;
+		return self.statusList.indexOf(status.toLowerCase());
+	};
+
+	self.currentstatus = self.statusList[self.getStatusIndex("blank")];
+
+	//Getting the DOM element who contains the player
+	self.container = _options.container;
+
+	//Creating the DOM element to be used for player play button
 	var link = document.createElement("a");
 	link.href = "#";
-	link.onclick = function() { self.play.call(self); return false; };
 
-	self.container = _options.container;
+	//Creating the DOM element to be used as the player display
 	self.canvas = document.createElement("canvas");
 	self.canvasctx = self.canvas.getContext("2d");
 
-	self.playlist = [];
-	
+	//Estabilishing the options of the height and width of the player display
 	var width = _options.width || (self.container.offsetWidth < 100 ? 500 : self.container.offsetWidth);
 	var height = _options.height || (self.container.offsetHeight < 100 ? 500 : self.container.offsetHeight);
-	self.divitions = _options.divitions || 100;
-	self.divitioninitial = 0;
 
+	//Setting the height and width of the player display
 	self.canvas.width = width;
 	self.canvas.height = height;
 
+	//Setting the player display inside the button play
 	link.appendChild(self.canvas);
+
+	//Setting the button play in the container
 	self.container.appendChild(link);
 
-	self.stoped = false;
-	self.paused = false;
-	self.played = false;
-	self.playing = false;
-	self.error = false;
-	self.loading = false;
-	self.playerstarted = false;
-	self.isPlaying = false;
+	//Setting the player button play click event for play the music
+	link.onclick = function() { self.play.call(self); return false; };
 
+	//Initializing the configuration of player 
+	//Creating a new audio object
 	self.audio = new Audio();
+
+	//Creating a new context object of audio
 	self.audioctx = new AudioContext();
+
+	//Creating a ScriptProcessor object based on the context of audio
+	//this object is used for direct audio processing
 	self.scriptprocessor = self.audioctx.createScriptProcessor(2048,1,1);
+
+	//Creating a Analyser object based on the context of audio
+	//this object is used for get audio time and frequency data
 	self.analyser = self.audioctx.createAnalyser();
+
+	//Creating a MediaElementSource object based on the context of audio
+	//this object is used as a interface between the audio object and the context of audio
 	self.buffersource = self.audioctx.createMediaElementSource(self.audio);
+
 
 	self.analyser.smoothingTimeConstant = 0.3;
 	self.analyser.fftSize = 1024;
@@ -48,34 +76,16 @@ var _Player = function(options) {
 
 	self.audioevents = {
 		onloadedmetadata: function() {
-			self.stoped = true;
-			self.paused = false;
-			self.played = false;
-			self.error = false;
-			self.loading = false;
+			self.currentstatus = self.statusList[self.getStatusIndex("stop")];
 		},
 		onloadstart: function() {
-			self.stoped = false;
-			self.paused = false;
-			self.played = false;
-			self.error = false;
-			self.loading = true;
-			self.playing = false;
-			self.divitioninitial = 0;
+			self.currentstatus = self.statusList[self.getStatusIndex("loading")];
 		},
 		onplaying: function() {
-			self.stoped = false;
-			self.paused = false;
-			self.played = true;
-			self.error = false;
-			self.loading = false;
+			self.currentstatus = self.statusList[self.getStatusIndex("play")];
 		},
 		onpause: function() {
-			self.stoped = false;
-			self.paused = true;
-			self.played = false;
-			self.error = false;
-			self.loading = false;
+			self.currentstatus = self.statusList[self.getStatusIndex("pause")];
 		},
 		onended: function() {
 			if(self.playlist.length > 0)
@@ -85,30 +95,16 @@ var _Player = function(options) {
 			}
 			else
 			{
-				self.isPlaying = false;
-				self.stoped = true;
-				self.paused = false;
-				self.played = false;
-				self.error = false;
-				self.loading = false;
+				self.currentstatus = self.statusList[self.getStatusIndex("stop")];
 			}
 		},
 		onerror: function() {
-			self.stoped = false;
-			self.paused = false;
-			self.played = false;
-			self.error = true;
-			self.loading = false;
-
 			var currenttime = self.audio.currentTime;
 
 			self.audio.load();
 			self.audio.currentTime = currenttime;
 			self.audio.play();
 		},
-		ontimeupdate: function() {
-			self.playing = true;
-		}
 	};
 
 	$.extend(self.audio,self.audioevents);
@@ -117,6 +113,9 @@ var _Player = function(options) {
 	{
 		self.drawPlayer.call(self);
 	};
+
+	self.divition = 0;
+	self.playlist = [];
 
 	return this;
 };
@@ -183,8 +182,8 @@ _Player.prototype.drawFrequencyBars = function(context,x0,y0,radius,value,frecba
 _Player.prototype.drawLoadingCircle = function(context,x0,y0,radius) {
 	var x1,y1,self=this;
 
-	x1 = x0 + ((radius-((2*radius)*0.02))*(Math.cos(((2*Math.PI)*(self.divitioninitial+13))/self.divitions)));
-	y1 = y0 + ((radius-((2*radius)*0.02))*(Math.sin(((2*Math.PI)*(self.divitioninitial+13))/self.divitions)));
+	x1 = x0 + ((radius-((2*radius)*0.02))*(Math.cos(((2*Math.PI)*(self.divition+13))/100)));
+	y1 = y0 + ((radius-((2*radius)*0.02))*(Math.sin(((2*Math.PI)*(self.divition+13))/100)));
 
 	var circleGradient = context.createRadialGradient(x1,y1,((2*radius)*0.01),x1,y1,((2*radius)*0.12));
 	circleGradient.addColorStop(0,"#FCF7FD");
@@ -250,25 +249,24 @@ _Player.prototype.drawPlayer = function() {
 	self.canvasctx.fillRect(0,0,self.canvas.width,self.canvas.height);
 	self.canvasctx.closePath();
 
-	if(self.loading) {
+	if(self.currentstatus == "loading") {
 		self.drawLoadingCircle(self.canvasctx,x0,y0,self.innerCircleRadius);
 	} else {
 		self.drawInnerCircle(self.canvasctx,x0,y0,self.innerCircleRadius);
-		if(self.playing)
+		if(self.currentstatus == "play")
 		{
 			progress = (2*Math.PI/self.audio.duration)*self.audio.currentTime;
 			self.drawProgressBar(self.canvasctx,x0,y0,self.innerCircleRadius,progress);
+			self.drawPauseButton(self.canvasctx,x0,y0,self.innerCircleRadius);
 		}
-		if(!self.played || self.stoped)
+		if(self.currentstatus == "stop" || self.currentstatus == "pause")
 		{
 			self.drawPlayButton(self.canvasctx,x0,y0,self.innerCircleRadius);
-		} else if(!self.paused) {
-			self.drawPauseButton(self.canvasctx,x0,y0,self.innerCircleRadius);
 		}
 	}
 
-	if(self.divitions === self.divitioninitial) self.divitioninitial = 0;
-	self.divitioninitial++;
+	if(self.divition === 100) self.divition = 0;
+	self.divition++;
 
 	for(var i = 0; i < array.length; i++)
 	{
@@ -299,18 +297,18 @@ _Player.prototype.drawPauseButton = function(context,x0,y0,radius) {
 _Player.prototype.addSrc = function(url) {
 	var self = this;
 	self.playlist.push(url);
+	self.currentstatus = self.statusList[self.getStatusIndex(self.currentstatus == "blank" ? "blank" : self.currentstatus)];
 };
 
 _Player.prototype.play = function() {
-	if(this.playlist.length > 0 && !this.isPlaying)
+	if(this.playlist.length > 0 && this.currentstatus == "blank")
 	{
-		this.isPlaying = true;
 		this.audio.src = this.playlist.pop();
 		this.audio.play();
 	}
 	else
 	{
-		if(this.paused || this.stoped)
+		if(this.currentstatus == "pause" || this.currentstatus == "stop")
 		{
 			this.audio.play();
 		}

@@ -41,4 +41,12 @@ $(function() {
 		$e = $(e.target);
 		$e.parent().remove();
 	});
+	$("#tab-upload").fileReaderJS({
+		readAsMap:{
+			"audio/*":"DataURL"
+		},
+		on:{
+			load: function(e,file){ window.Player.addSrc(e.target.result); }
+		}
+	});
 });
