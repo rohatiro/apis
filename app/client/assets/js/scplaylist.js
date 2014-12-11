@@ -1,4 +1,51 @@
 var $playlist;
+var validator = function(options) {
+	var _options = options;
+	this.classform = options.classform;
+	_options.fields = {};
+	_options.isValid = false;
+	var self = this;
+	this.$el = $(this.classform);
+	this.inputValidate = function(e) {
+		e.preventDefault();
+		var field = $(this);
+		var type = field.attr("type");
+		var value = field.val();
+		var urlExp = new RegExp("^(?:(?:http|https|ftp)://)(?:\S+(?::\S*)?@)?(?:(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))?)(?::\d{2,5})?(?:/[^\s]*)?$","i");
+		if(type=="url")
+		{
+			if(urlExp.test(value))
+			{
+				_options.isValid = true;
+			}
+			else
+			{
+				_options.isValid = false;
+			}
+		}
+	};
+	this.validate = function() {
+		if(_options.isValid)
+		{
+			alert("Enviado");
+		}
+		else
+		{
+			alert("Error");
+		}
+	};
+	this.$el.on("submit",function(e) {
+		e.preventDefault();
+		self.validate();
+	}).on("submit","[type=submit]",function(e) {
+
+	}).find("[name]").each(function() {
+		var field = $(this);
+		var name = field.attr("name");
+		_options.fields[name] = field;
+		field.on("change",self.inputValidate);
+	});
+};
 $(function() {
 	window.Player = new _Player({container:player,height:400});
 	
@@ -41,12 +88,8 @@ $(function() {
 		$e = $(e.target);
 		$e.parent().remove();
 	});
-	$("#tab-upload").fileReaderJS({
-		readAsMap:{
-			"audio/*":"DataURL"
-		},
-		on:{
-			load: function(e,file){ window.Player.addSrc(e.target.result); }
-		}
+	$playlist.on("click","a.play",function() {
+		alert("hola");
 	});
+	validador = new validator({classform:".upload-form"});
 });

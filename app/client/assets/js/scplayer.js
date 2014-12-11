@@ -42,6 +42,7 @@ var _Player = function(options) {
 
 	//Setting the button play in the container
 	self.container.appendChild(link);
+	self.container.style.display = "none";
 
 	//Setting the player button play click event for play the music
 	link.onclick = function() { self.play.call(self); return false; };
@@ -75,36 +76,18 @@ var _Player = function(options) {
 	self.buffersource.connect(self.audioctx.destination);
 
 	self.audioevents = {
-		onloadedmetadata: function() {
-			self.currentstatus = self.statusList[self.getStatusIndex("stop")];
-		},
-		onloadstart: function() {
-			self.currentstatus = self.statusList[self.getStatusIndex("loading")];
-		},
-		onplaying: function() {
+		onplay: function() {
 			self.currentstatus = self.statusList[self.getStatusIndex("play")];
 		},
 		onpause: function() {
 			self.currentstatus = self.statusList[self.getStatusIndex("pause")];
 		},
-		onended: function() {
-			if(self.playlist.length > 0)
-			{
-				self.audio.src = self.playlist.pop();
-				self.audio.play();
-			}
-			else
-			{
-				self.currentstatus = self.statusList[self.getStatusIndex("stop")];
-			}
+		onfinish: function() {
+			self.currentstatus = self.statusList[self.getStatusIndex("stop")];
 		},
-		onerror: function() {
-			var currenttime = self.audio.currentTime;
-
-			self.audio.load();
-			self.audio.currentTime = currenttime;
-			self.audio.play();
-		},
+		whileloading: function() {
+			self.currentstatus = self.statusList[self.getStatusIndex("loading")];
+		}
 	};
 
 	$.extend(self.audio,self.audioevents);
@@ -115,7 +98,8 @@ var _Player = function(options) {
 	};
 
 	self.divition = 0;
-	self.playlist = [];
+	self.divitions = 100;
+	self.playlist = new SoundManager();
 
 	return this;
 };
@@ -182,8 +166,8 @@ _Player.prototype.drawFrequencyBars = function(context,x0,y0,radius,value,frecba
 _Player.prototype.drawLoadingCircle = function(context,x0,y0,radius) {
 	var x1,y1,self=this;
 
-	x1 = x0 + ((radius-((2*radius)*0.02))*(Math.cos(((2*Math.PI)*(self.divition+13))/100)));
-	y1 = y0 + ((radius-((2*radius)*0.02))*(Math.sin(((2*Math.PI)*(self.divition+13))/100)));
+	x1 = x0 + ((radius-((2*radius)*0.02))*(Math.cos(((2*Math.PI)*(self.divition+13))/self.divitions)));
+	y1 = y0 + ((radius-((2*radius)*0.02))*(Math.sin(((2*Math.PI)*(self.divition+13))/self.divitions)));
 
 	var circleGradient = context.createRadialGradient(x1,y1,((2*radius)*0.01),x1,y1,((2*radius)*0.12));
 	circleGradient.addColorStop(0,"#FCF7FD");
@@ -265,7 +249,7 @@ _Player.prototype.drawPlayer = function() {
 		}
 	}
 
-	if(self.divition === 100) self.divition = 0;
+	if(self.divition === self.divitions) self.divition = 0;
 	self.divition++;
 
 	for(var i = 0; i < array.length; i++)
@@ -294,27 +278,36 @@ _Player.prototype.drawPauseButton = function(context,x0,y0,radius) {
 	context.closePath();
 };
 
-_Player.prototype.addSrc = function(url) {
+_Player.prototype.addSrc = function(id,url) {
 	var self = this;
-	self.playlist.push(url);
+	var opt = self.audioevents;
+	
+	opt.id = id;
+	opt.url = url;
+
+	self.playlist.createSound(opt);
 	self.currentstatus = self.statusList[self.getStatusIndex(self.currentstatus == "blank" ? "blank" : self.currentstatus)];
 };
 
 _Player.prototype.play = function() {
-	if(this.playlist.length > 0 && this.currentstatus == "blank")
+	if(this.currentstatus == "blank")
 	{
-		this.audio.src = this.playlist.pop();
-		this.audio.play();
+		this.currentSong = this.playlist.getSoundById(this.playlist.soundIDs[0]);
+		this.buffersource.disconnect();
+		this.buffersource = this.audioctx.createMediaElementSource(this.currentSong._a);
+		this.buffersource.connect(this.analyser);
+		this.buffersource.connect(this.audioctx.destination);
+		this.currentSong.play();
 	}
 	else
 	{
-		if(this.currentstatus == "pause" || this.currentstatus == "stop")
+		if(this.currentstatus == "play")
 		{
-			this.audio.play();
+			this.currentSong.pause();
 		}
-		else
+		else if(this.currentstatus == "pause" || this.currentstatus == "stop")
 		{
-			this.pause();
+			this.currentSong.play();
 		}
 	}
 };
