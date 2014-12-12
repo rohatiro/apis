@@ -5,9 +5,11 @@
 {% block headscripts %}
 	<script type="text/javascript" src="/bcomponents/jquery-ui/jquery-ui.js"></script>
 	<script type="text/javascript" src="/js/soundmanager2.js"></script>
+	<script type="text/javascript" src="/js/swig.min.js"></script>
+	<script type="text/javascript" src="/js/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="/js/filereader.js"></script>
 	<script type="text/javascript" src="/js/scplayer.js"></script>
 	<script type="text/javascript" src="/js/scplaylist.js"></script>
-	<script type="text/javascript" src="/js/filereader.js"></script>
 {% endblock %}
 {% block body %}
 <article class="row">
@@ -77,7 +79,7 @@
 			<div id="tab-upload">
 				<div class="col-xs-12">
 					<h4>Add songs by url</h4>
-					<form action="" class="upload-form" role="form">
+					<form name="upload" class="upload-form" role="form">
 						<div class="form-group">
 							<input type="url" name="url" placeholder="Url" class="form-control" />
 						</div>

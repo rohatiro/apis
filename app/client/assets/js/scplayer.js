@@ -85,8 +85,8 @@ var _Player = function(options) {
 		onfinish: function() {
 			self.currentstatus = self.statusList[self.getStatusIndex("stop")];
 		},
-		whileloading: function() {
-			self.currentstatus = self.statusList[self.getStatusIndex("loading")];
+		onresume: function() {
+			self.currentstatus = self.statusList[self.getStatusIndex("play")];
 		}
 	};
 
@@ -292,22 +292,28 @@ _Player.prototype.addSrc = function(id,url) {
 _Player.prototype.play = function() {
 	if(this.currentstatus == "blank")
 	{
-		this.currentSong = this.playlist.getSoundById(this.playlist.soundIDs[0]);
+		this.currentSong = this.playlist.soundIDs[0];
 		this.buffersource.disconnect();
-		this.buffersource = this.audioctx.createMediaElementSource(this.currentSong._a);
+		this.buffersource = this.audioctx.createMediaElementSource(this.playlist.getSoundById(this.currentSong)._a);
 		this.buffersource.connect(this.analyser);
 		this.buffersource.connect(this.audioctx.destination);
-		this.currentSong.play();
+		this.currentstatus = this.statusList[this.getStatusIndex("loading")];
+		this.playlist.getSoundById(this.currentSong).load({
+			stream:false,
+			onload:function() {
+				this.play();
+			}
+		});
 	}
 	else
 	{
 		if(this.currentstatus == "play")
 		{
-			this.currentSong.pause();
+			this.playlist.getSoundById(this.currentSong).pause();
 		}
 		else if(this.currentstatus == "pause" || this.currentstatus == "stop")
 		{
-			this.currentSong.play();
+			this.playlist.getSoundById(this.currentSong).play();
 		}
 	}
 };
