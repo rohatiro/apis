@@ -19,7 +19,7 @@ var _Player = function(options) {
 	self.currentstatus = self.statusList[self.getStatusIndex("blank")];
 
 	//Getting the DOM element who contains the player
-	self.container = _options.container;
+	self.container = $(_options.container);
 
 	//Creating the DOM element to be used for player play button
 	var link = document.createElement("a");
@@ -41,8 +41,8 @@ var _Player = function(options) {
 	link.appendChild(self.canvas);
 
 	//Setting the button play in the container
-	self.container.appendChild(link);
-	self.container.style.display = "none";
+	self.container.append(link);
+	self.container.css("display", "none");
 
 	//Setting the player button play click event for play the music
 	link.onclick = function() { self.play.call(self); return false; };
@@ -83,7 +83,14 @@ var _Player = function(options) {
 			self.currentstatus = self.statusList[self.getStatusIndex("pause")];
 		},
 		onfinish: function() {
-			self.currentstatus = self.statusList[self.getStatusIndex("stop")];
+			self.trackPlayed(self.currentSong);
+			var nextsongid = self.nextSongId(self.currentSong);
+			if(nextsongid != -1)
+				self.changeSong(nextsongid);
+			else
+			{
+				self.currentstatus = self.statusList[self.getStatusIndex("stop")];
+			}
 		},
 		onresume: function() {
 			self.currentstatus = self.statusList[self.getStatusIndex("play")];
@@ -96,6 +103,38 @@ var _Player = function(options) {
 	{
 		self.drawPlayer.call(self);
 	};
+
+	self.playlistcontainer = $(_options.playlistcontainer);
+	self.playlistcontainer.droppable({
+		active:"ui-state-default",
+		accept:":not(.ui-sortable-helper)",
+		drop:function(e,ui) {
+			var id = Number(ui.draggable.attr("id"));
+			var track = $playlist.find("#"+id+".track");
+			var cln;
+			if(!track.length)
+			{
+				cln = ui.draggable.clone().append("<div class='delete'></div>");
+				cln.appendTo(this);
+			}
+		}
+	}).sortable({
+		items:".track",
+		handle:".track-dragcontoler",
+		sort:function(e,ui) {
+			$(this).removeClass("ui-state-default");
+		}
+	});
+
+	self.playlistcontainer.on("click",".delete",function(e) {
+		$e = $(e.target);
+		$e.parent().remove();
+	});
+
+	self.playlistcontainer.on("click","a.play",function() {
+		self.container.css("display", "block");
+		self.play();
+	});
 
 	self.divition = 0;
 	self.divitions = 100;
@@ -239,7 +278,7 @@ _Player.prototype.drawPlayer = function() {
 		self.drawInnerCircle(self.canvasctx,x0,y0,self.innerCircleRadius);
 		if(self.currentstatus == "play")
 		{
-			progress = (2*Math.PI/self.audio.duration)*self.audio.currentTime;
+			progress = (2*Math.PI*self.playlist.getSoundById(self.currentSong)._a.currentTime)/self.playlist.getSoundById(self.currentSong)._a.duration;
 			self.drawProgressBar(self.canvasctx,x0,y0,self.innerCircleRadius,progress);
 			self.drawPauseButton(self.canvasctx,x0,y0,self.innerCircleRadius);
 		}
@@ -276,6 +315,56 @@ _Player.prototype.drawPauseButton = function(context,x0,y0,radius) {
 	context.fillRect((x0 - radius)+((2*radius)/4),(y0 - radius)+((2*radius)/4),(2*radius)/6,(2*radius)/2);
 	context.fillRect((x0 - radius)+((7*(2*radius))/12),(y0 - radius)+((2*radius)/4),(2*radius)/6,(2*radius)/2);
 	context.closePath();
+};
+
+_Player.prototype.trackPlayed = function(id) {
+	var $id = $("#"+id);
+	if(!$id.hasClass("played"))
+	{
+		$id.addClass("played");
+	}
+};
+
+_Player.prototype.resetSongsStatus = function() {
+	this.playlistcontainer.find(".track").each(function(index,el) {
+		var $el = $(el);
+		if($el.hasClass("played"))
+			$el.removeClass("played");
+	});
+};
+
+_Player.prototype.nextSongId = function() {
+	var currentelement = $(this.currentSong);
+	var nextsong = currentelement.next();
+	var next = true;
+	while(next)
+	{
+		if(!nextsong.length) {
+			nextsong = false;
+			next = false;
+		}
+		else if(!nextsong.hasClass("played")) {
+			nextsong = nextsong.next();
+		} else {
+			next = false;
+		}
+	}
+	return nextsong ? nextsong.attr("id") : -1;
+};
+
+_Player.prototype.changeSong = function(id) {
+	this.currentSong = this.playlist.soundIDs[id];
+	this.buffersource.disconnect();
+	this.buffersource = this.audioctx.createMediaElementSource(this.playlist.getSoundById(this.currentSong)._a);
+	this.buffersource.connect(this.analyser);
+	this.buffersource.connect(this.audioctx.destination);
+	this.currentstatus = this.statusList[this.getStatusIndex("loading")];
+	this.playlist.getSoundById(this.currentSong).load({
+		stream:false,
+		onload:function() {
+			this.play();
+		}
+	});
 };
 
 _Player.prototype.addSrc = function(id,url) {
