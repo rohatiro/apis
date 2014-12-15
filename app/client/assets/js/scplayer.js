@@ -30,8 +30,8 @@ var _Player = function(options) {
 	self.canvasctx = self.canvas.getContext("2d");
 
 	//Estabilishing the options of the height and width of the player display
-	var width = _options.width || (self.container.offsetWidth < 100 ? 500 : self.container.offsetWidth);
-	var height = _options.height || (self.container.offsetHeight < 100 ? 500 : self.container.offsetHeight);
+	var width = _options.width || (self.container.width() < 100 ? 500 : self.container.width());
+	var height = _options.height || (self.container.height() < 100 ? 500 : self.container.height());
 
 	//Setting the height and width of the player display
 	self.canvas.width = width;
@@ -109,13 +109,18 @@ var _Player = function(options) {
 		active:"ui-state-default",
 		accept:":not(.ui-sortable-helper)",
 		drop:function(e,ui) {
-			var id = Number(ui.draggable.attr("id"));
-			var track = $playlist.find("#"+id+".track");
+			var url = window.location.protocol + "//" + window.location.host + "/soundcloud/tracks/" + ui.draggable.attr("id");
+			var id = (url+"-T"+Math.random()).replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "");
+			var track = self.playlistcontainer.find("#"+id);
 			var cln;
 			if(!track.length)
 			{
+				self.addSrc(id,url);
 				cln = ui.draggable.clone().append("<div class='delete'></div>");
+				cln.attr("id",id);
 				cln.appendTo(this);
+				if(self.playlistcontainer.has(".track").length && self.playlistcontainer.find(".controls .play").hasClass("disabled"))
+					self.playlistcontainer.find(".controls .play").removeClass("disabled");
 			}
 		}
 	}).sortable({
@@ -353,46 +358,38 @@ _Player.prototype.nextSongId = function() {
 };
 
 _Player.prototype.changeSong = function(id) {
+	var self = this;
 	this.currentSong = this.playlist.soundIDs[id];
 	this.buffersource.disconnect();
 	this.buffersource = this.audioctx.createMediaElementSource(this.playlist.getSoundById(this.currentSong)._a);
 	this.buffersource.connect(this.analyser);
 	this.buffersource.connect(this.audioctx.destination);
 	this.currentstatus = this.statusList[this.getStatusIndex("loading")];
-	this.playlist.getSoundById(this.currentSong).load({
-		stream:false,
-		onload:function() {
-			this.play();
-		}
-	});
+	self.playlist.getSoundById(self.currentSong).play();
 };
 
 _Player.prototype.addSrc = function(id,url) {
 	var self = this;
-	var opt = self.audioevents;
+	var _opt = self.audioevents;
 	
-	opt.id = id;
-	opt.url = url;
+	_opt.id = id;
+	_opt.url = url;
 
-	self.playlist.createSound(opt);
+	self.playlist.createSound(_opt);
 	self.currentstatus = self.statusList[self.getStatusIndex(self.currentstatus == "blank" ? "blank" : self.currentstatus)];
 };
 
 _Player.prototype.play = function() {
+	var self = this;
 	if(this.currentstatus == "blank")
 	{
-		this.currentSong = this.playlist.soundIDs[0];
+		this.currentSong = this.playlistcontainer.find(".track").first().attr("id"); 	
 		this.buffersource.disconnect();
 		this.buffersource = this.audioctx.createMediaElementSource(this.playlist.getSoundById(this.currentSong)._a);
 		this.buffersource.connect(this.analyser);
 		this.buffersource.connect(this.audioctx.destination);
 		this.currentstatus = this.statusList[this.getStatusIndex("loading")];
-		this.playlist.getSoundById(this.currentSong).load({
-			stream:false,
-			onload:function() {
-				this.play();
-			}
-		});
+		self.playlist.getSoundById(self.currentSong).play();
 	}
 	else
 	{
