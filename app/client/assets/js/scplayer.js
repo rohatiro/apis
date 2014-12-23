@@ -339,7 +339,7 @@ _Player.prototype.resetSongsStatus = function() {
 };
 
 _Player.prototype.nextSongId = function() {
-	var currentelement = $(this.currentSong);
+	var currentelement = $("#"+this.currentSong);
 	var nextsong = currentelement.next();
 	var next = true;
 	while(next)
@@ -348,7 +348,7 @@ _Player.prototype.nextSongId = function() {
 			nextsong = false;
 			next = false;
 		}
-		else if(!nextsong.hasClass("played")) {
+		else if(nextsong.hasClass("played")) {
 			nextsong = nextsong.next();
 		} else {
 			next = false;
@@ -359,7 +359,7 @@ _Player.prototype.nextSongId = function() {
 
 _Player.prototype.changeSong = function(id) {
 	var self = this;
-	this.currentSong = this.playlist.soundIDs[id];
+	this.currentSong = id;
 	this.buffersource.disconnect();
 	this.buffersource = this.audioctx.createMediaElementSource(this.playlist.getSoundById(this.currentSong)._a);
 	this.buffersource.connect(this.analyser);
