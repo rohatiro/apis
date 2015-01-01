@@ -404,10 +404,6 @@ _Player.prototype.play = function() {
 	}
 };
 
-_Player.prototype.pause = function() {
-	this.audio.pause();
-};
-
 $(window).on("resize",function() {
 	var width = $(Player.container).width();
 	Player.canvas.width = width;
