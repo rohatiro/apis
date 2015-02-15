@@ -128,7 +128,7 @@ var _Player = function(options) {
 		handle:".track-dragcontoler",
 		sort:function(e,ui) {
 			$(this).removeClass("ui-state-default");
-		}
+		
 	});
 
 	self.playlistcontainer.on("click",".delete",function(e) {

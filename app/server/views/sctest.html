@@ -1,0 +1,94 @@
+{% extends "./soundcloud.html" %}
+{% block headstyles %}
+	<link rel="stylesheet" type="text/css" href="/styl/scplayer.css" />
+{% endblock %}
+{% block headscripts %}
+	<script type="text/javascript" src="/bcomponents/jquery-ui/jquery-ui.js"></script>
+	<script type="text/javascript" src="/js/soundmanager2.js"></script>
+	<script type="text/javascript" src="/js/swig.min.js"></script>
+	<script type="text/javascript" src="/js/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="/js/filereader.js"></script>
+	<script type="text/javascript" src="/js/scplayer_test.js"></script>
+{% endblock %}
+{% block body %}
+<article id="scplayer" class="row">
+	<div class="col-md-8">
+		<div id="player" class="hide"></div>
+		<div id="playlist" class="well">
+			<div class="container-fluid">
+				<div class="row h3">Playlist</div>
+				<div class="row text-right controls">
+					<a href="javascript:void(0);" class="play btn btn-primary disabled">Play</a>
+				</div>
+				<div class="row tracks">
+					<div class="col-lg-12"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-4 tabs">
+		<ul class="row nav nav-tabs">
+			<!-- <li class="col-xs-4 tab tab-favorites"> -->
+			<li>
+				<!-- <a href="#tab-favorites" class="tab-label">Favorites</a> -->
+				<a href="#tab-favorites">Favorites</a>
+			</li>
+			<!-- <li class="col-xs-4 tab tab-playlist"> -->
+			<li>
+				<!-- <a href="#tab-playlist" class="tab-label">Playlists</a> -->
+				<a href="#tab-playlist">Playlists</a>
+			</li>
+			<!-- <li class="col-xs-4 tab tab-upload"> -->
+			<li>	
+				<!-- <a href="#tab-upload" class="tab-label">Upload</a> -->
+				<a href="#tab-upload">Others</a>
+			</li>
+		</ul>
+		<div class="row tabs-container">
+			<div id="tab-favorites">
+				{% if favorites %}
+				{% for fav in favorites %}
+				<div class="track" id="{{ fav.id }}">
+					<div class="track-dragcontoler"></div>
+					<div class="track-container">
+						<figure class="track-artwork-container">
+							<img src="{% if fav.artwork_url %}{{ fav.artwork_url }}{% else %}{{ fav.user.avatar_url }}{% endif %}" class="track-artwork-img">
+						</figure>
+						<div class="track-info-container">
+							<p class="track-title">{{ fav.title }}</p>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+				{% else %}
+				<div class="col-xs-12">
+					<p>You need loggin for get the favorites tracks</p>
+				</div>
+				{% endif %}
+			</div>
+			<div id="tab-playlist">
+				{% if favorites %}
+				PLAYLIST
+				{% else %}
+				<div class="col-xs-12">
+					<p>You need loggin for get the playlists</p>
+				</div>
+				{% endif %}
+			</div>
+			<div id="tab-upload">
+				<div class="col-xs-12">
+					<h4>Add songs by url</h4>
+					<form name="upload" class="upload-form" role="form">
+						<div class="form-group">
+							<input type="url" name="url" placeholder="Url" class="form-control" />
+						</div>
+						<div class="form-group">
+							<button class="add-url btn btn-primary btn-lg btn-block">Add</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</article>
+{% endblock %}

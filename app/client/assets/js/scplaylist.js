@@ -15,44 +15,11 @@ $(function() {
 	});
 	
 	$tabs.find("> ul > li").first().addClass("active");
-	
-	// $playlist = $("#playlist");
-	
-	// $playlist.droppable({
-	// 	active:"ui-state-default",
-	// 	accept:":not(.ui-sortable-helper)",
-	// 	drop:function(e,ui) {
-	// 		var id = Number(ui.draggable.attr("id"));
-	// 		var track = $playlist.find("#"+id+".track");
-	// 		var cln;
-	// 		if(!track.length)
-	// 		{
-	// 			cln = ui.draggable.clone().append("<div class='delete'></div>");
-	// 			cln.appendTo(this);
-	// 		}
-	// 	}
-	// }).sortable({
-	// 	items:".track",
-	// 	handle:".track-dragcontoler",
-	// 	sort:function(e,ui) {
-	// 		$(this).removeClass("ui-state-default");
-	// 	}
-	// });
 
 	$(".track").draggable({
 		helper:"clone",
 		cursor:"move"
 	});
-
-	// $playlist.on("click",".delete",function(e) {
-	// 	$e = $(e.target);
-	// 	$e.parent().remove();
-	// });
-
-	// $playlist.on("click","a.play",function() {
-	// 	Player.container.style.display = "block";
-	// 	Player.play();
-	// });
 
 	$(".upload-form").validate({
 		rules:{

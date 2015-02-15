@@ -92,6 +92,10 @@ var player = function(req,res) {
 	}
 };
 
+var test = function(req,res) {
+	res.render("sctest");
+};
+
 module.exports = {
 	home:home,
 	login:login,
@@ -99,5 +103,6 @@ module.exports = {
 	github:github,
 	stream:stream,
 	waveform:waveform,
-	player:player
+	player:player,
+	test:test
 };

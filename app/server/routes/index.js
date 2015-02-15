@@ -26,6 +26,7 @@ module.exports = function(server,passport) {
 	});
 
 	server.get("/", site.home);
+	server.get("/test", site.test);
 	server.get("/soundcloud", site.soundcloud);
 	server.get("/soundcloud/login", passport.authenticate('soundcloud',{successRedirect:"/soundcloud",failureRedirect:"/"}));
 	server.get("/soundcloud/player", site.player);
