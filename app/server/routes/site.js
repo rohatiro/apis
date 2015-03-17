@@ -19,18 +19,18 @@ var soundcloud = function(req,res) {
 			try
 			{
 				var json = JSON.parse(body);
-				if (json.error) res.render("soundcloud",{error:true});
-				res.render("scfavorites",{user:req.user,favorites:json});
+				if (json.error) res.render("schome",{error:true});
+				res.render("schome",{user:req.user,favorites:json});
 			}
 			catch(ex)
 			{
-				res.render("soundcloud",{error:true});
+				res.render("schome",{error:true});
 			}
 		});
 	}
 	else
 	{
-		res.render("soundcloud");
+		res.render("schome");
 	}
 };
 
