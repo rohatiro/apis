@@ -1,30 +1,16 @@
 {% extends "./soundcloud.html" %}
-{% block headstyles %}
-	<link rel="stylesheet" type="text/css" href="/styl/scfavorites.css" />
-{% endblock %}
-{% block headscripts %}
-	<script type="text/javascript" src="//connect.soundcloud.com/sdk.js"></script>
-	<script type="text/javascript" src="/js/waveform.js"></script>
-	<script type="text/javascript" src="/js/soundmanager2.js"></script>
-	<script type="text/javascript" src="/js/sc.js"></script>
-{% endblock %}
 {% block body %}
+<article class="soundcloud__favorites">
+{% if favorites %}
 {% for fav in favorites %}
-	<article class='track' id='{{ fav.id }}'>
-		<figure class='track-artwork-container'>
-			<a class='track-artwork-link' href='#'>
-				<img class='track-artwork-img' src='{% if fav.artwork_url %} {{fav.artwork_url}} {% else %} {{fav.user.avatar_url}} {% endif %}' />
-			</a>
-		</figure>
-		<div class='track-controls-container'>
-			<div class="track-title-container">
-				<span class="track-title">{{fav.title}}</span>
-			</div>
-			<div class='track-controls'>
-				<a href="javascript:void(0)" class='btn play'></a href='#'>
-			</div>
-			<div class='waveform' data-url="{{ fav.waveform_url }}"></div>
-		</div>
-	</article>
+	<div class="soundcloud__favorites__song">
+		<img src="{% if fav.artwork_url %}{{ fav.artwork_url }}{% else %}{{ fav.user.avatar_url }}{% endif %}" class="track-artwork-img">
+		<span class="soundcloud__favorites__song__title">{{ fav.title }}</span>
+		<a href="/soundcloud/tracks/{{ fav.id }}">{{ fav.title }}</a>
+	</div>
 {% endfor %}
+{% else %}
+	<p class="soundcloud__favorites__nosongs">No hay canciones</p>
+{% endif %}
+</article>
 {% endblock %}

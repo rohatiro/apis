@@ -1,11 +1,23 @@
 {% extends "./soundcloud.html" %}
 {% block body %}
+{% if browser %}
 <article class="soundcloud__article">
-	<header class="soundcloud__article__title">
-		<a alt="" href="#" class="soundcloud__article__title__text">Favoritos</a>
-	</header>
+	<p class="soundcloud__browsererror">El navegador no es compatible con el Web Audio API</p>
+</article>
+{% elseif user %}
+<article class="soundcloud__article">
+	<header class="soundcloud__article__title">Favoritos</header>
 	<p class="soundcloud__article__description">
 		Demo que muestra una lista de las canciones marcadas como favoritas por el usuario actual
 	</p>
+	<a alt="Favoritos" href="/soundcloud/favorites" class="soundcloud__article__title__text"></a>
 </article>
+{% else %}
+<article class="soundcloud__article">
+	<p class="soundcloud__login">
+		<span class="soundcloud__login__message">Para utilizar los siguientes ejemplos necesitas ingresar a tu cuenta</span>
+		<a href="/soundcloud/login" class="soundcloud__login__button">Sign in</a>
+	</p>
+</article>
+{% endif %}
 {% endblock %}

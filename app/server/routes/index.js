@@ -14,7 +14,21 @@ module.exports = function(server,passport) {
 		if (req.isAuthenticated())
 			return next();
 		else
-			res.redirect("/auth/soundcloud");
+			res.redirect("/soundcloud");
+	};
+
+	var validWebAudioAPI = function(req,res,next) {
+		var ua = req.headers["user-agent"];
+		var rex = new RegExp(/AppleWebKit\/([0-9]{3})/g);
+		var match = ua.match(rex);
+		if(!match) {
+			req.webaudio = false;
+		} else if(req.user) {
+			req.webaudio = "logged";
+		} else {
+			req.webaudio = "anonymous";
+		}
+		next();
 	};
 
 	passport.serializeUser(function(user,done) {
@@ -27,7 +41,8 @@ module.exports = function(server,passport) {
 
 	server.get("/", site.home);
 	server.get("/test", site.test);
-	server.get("/soundcloud", site.soundcloud);
+	server.get("/soundcloud", validWebAudioAPI, site.soundcloud);
+	server.get("/soundcloud/favorites", isLoggeds, site.favorites);
 	server.get("/soundcloud/login", passport.authenticate('soundcloud',{successRedirect:"/soundcloud",failureRedirect:"/"}));
 	server.get("/soundcloud/player", site.player);
 	server.get("/soundcloud/tracks/:id", site.stream);

@@ -9,29 +9,30 @@ var home = function(req,res) {
 };
 
 var soundcloud = function(req,res) {
+	if(!req.webaudio) {
+		res.render("schome",{user:false,browser:true});
+	} else if(req.webaudio == "logged") {
+		res.render("schome",{user:req.user});
+	} else {
+		res.render("schome",{user:false});
+	}
+};
+
+var favorites = function(req, res) {
 	var clientid = req._passport.instance._strategy("soundcloud")._oauth2._clientId;
-	if(req.user)
-	{
-		request({
-			method:"GET",
-			url:req.user.uri+"/favorites.json?client_id="+clientid,
-		},function(err,respond,body) {
-			try
-			{
-				var json = JSON.parse(body);
-				if (json.error) res.render("schome",{error:true});
-				res.render("schome",{user:req.user,favorites:json});
-			}
-			catch(ex)
-			{
-				res.render("schome",{error:true});
-			}
-		});
-	}
-	else
-	{
-		res.render("schome");
-	}
+	request({
+		method:"GET",
+		url:req.user.uri+"/favorites.json?client_id="+clientid,
+	},function(err,respond,body) {
+		try {
+			var json = JSON.parse(body);
+			if (json.error) res.render("scfavorites",{error:true});
+			res.render("scfavorites",{user:req.user, favorites:json});
+		}
+		catch(ex) {
+			res.render("scfavorites",{error:true});
+		}
+	});
 };
 
 var github = function(req,res) {
@@ -104,5 +105,6 @@ module.exports = {
 	stream:stream,
 	waveform:waveform,
 	player:player,
-	test:test
+	test:test,
+	favorites:favorites
 };

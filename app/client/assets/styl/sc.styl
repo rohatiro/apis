@@ -1,3 +1,5 @@
+*,*::after,*::before
+	box-sizing border-box
 @font-face
 	font-family 'apis'
 	src url('../fonts/apis.eot?-t23tiw')
@@ -6,9 +8,11 @@
 	font-style normal
 html
 	font-size 16px
+	font-family sans-serif
 .soundcloud__title
 	display block
 	background-color #005353
+	margin-bottom 1rem
 .soundcloud__title__text
 	color #eee
 	font-size 2rem
@@ -17,3 +21,53 @@ html
 	padding-left 0.9rem
 	padding-right 0.9rem
 	padding-top 0.6rem
+.soundcloud__article
+	position relative
+	margin-bottom 1rem
+.soundcloud__article__description
+	border-bottom 1px
+	border-bottom-color #ddd
+	border-left 0
+	border-left-color #ddd
+	border-right 0
+	border-right-color #ddd
+	border-style solid
+	border-top 0
+	border-top-color #ddd
+	margin 0
+	padding 1rem 0.5rem
+.soundcloud__article__title
+	background-color #764b06
+	color #eee
+	font-size 1.2rem
+	font-weight bold
+	padding 0.2rem 0.5rem
+.soundcloud__article__title__text
+	bottom 0
+	left 0
+	position absolute
+	right 0
+	top 0
+.soundcloud__login
+	margin-top 0
+	margin-bottom 1rem
+	text-align center
+.soundcloud__login__button
+	background-color #fd6f01
+	color #eee
+	display inline-block
+	font-size 1rem
+	font-weight bold
+	padding 0.5rem 0.8rem
+	text-decoration none
+	&:hover
+		text-decoration underline
+	&::before
+		content "\e614"
+		font-family "apis"
+		padding-right 0.4rem
+.soundcloud__login__message
+	display block
+	font-size 1.1rem
+	margin-bottom 1rem
+	text-align left
