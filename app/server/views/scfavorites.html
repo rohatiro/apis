@@ -4,9 +4,10 @@
 {% if favorites %}
 {% for fav in favorites %}
 	<div class="soundcloud__favorites__song">
-		<img src="{% if fav.artwork_url %}{{ fav.artwork_url }}{% else %}{{ fav.user.avatar_url }}{% endif %}" class="track-artwork-img">
-		<span class="soundcloud__favorites__song__title">{{ fav.title }}</span>
-		<a href="/soundcloud/tracks/{{ fav.id }}">{{ fav.title }}</a>
+		<a class="soundcloud__favorites__song__title" href="/soundcloud/tracks/{{ fav.id }}"><img src="{% if fav.artwork_url %}{{ fav.artwork_url }}{% else %}{{ fav.user.avatar_url }}{% endif %}" class="soundcloud__favorites__song__img"></a>
+		<a class="soundcloud__favorites__song__title" href="/soundcloud/tracks/{{ fav.id }}">{{ fav.title }}</a><br />
+		<a href="{{ fav.user.permalink_url }}" class="soundcloud__favorites__song__user">{{ fav.user.username }}</a>
+		<span class="soundcloud__favorites__song__duration">{{ fav.duration }}</span>
 	</div>
 {% endfor %}
 {% else %}
