@@ -48,6 +48,13 @@ var github = function(req,res) {
 	});
 };
 
+var songinfo = function(req, res) {
+	var id = req.params.id;
+	var client_id = req._passport.instance._strategy("soundcloud")._oauth2._clientId;
+	var url = req.user.uri+"/tracks/"+id+"?client_id="+client_id;
+	req.pipe(request(url)).pipe(res);
+};
+
 var stream = function(req,res) {
 	var id = req.params.id;
 	var client_id = req._passport.instance._strategy("soundcloud")._oauth2._clientId;
@@ -68,7 +75,8 @@ var waveform = function(req,res) {
 };
 
 var player = function(req,res) {
-	var clientid = req._passport.instance._strategy("soundcloud")._oauth2._clientId;
+	res.render("scplayer");
+	/*var clientid = req._passport.instance._strategy("soundcloud")._oauth2._clientId;
 	if(req.user)
 	{
 		request({
@@ -90,11 +98,7 @@ var player = function(req,res) {
 	else
 	{
 		res.render("scplayer");
-	}
-};
-
-var test = function(req,res) {
-	res.render("sctest");
+	}*/
 };
 
 module.exports = {
@@ -105,6 +109,6 @@ module.exports = {
 	stream:stream,
 	waveform:waveform,
 	player:player,
-	test:test,
-	favorites:favorites
+	favorites:favorites,
+	songinfo:songinfo
 };

@@ -40,12 +40,12 @@ module.exports = function(server,passport) {
 	});
 
 	server.get("/", site.home);
-	server.get("/test", site.test);
 	server.get("/soundcloud", validWebAudioAPI, site.soundcloud);
-	server.get("/soundcloud/favorites", isLoggeds, site.favorites);
 	server.get("/soundcloud/login", passport.authenticate('soundcloud',{successRedirect:"/soundcloud",failureRedirect:"/"}));
-	server.get("/soundcloud/player", site.player);
-	server.get("/soundcloud/tracks/:id", site.stream);
+	server.get("/soundcloud/tracks/:id", isLoggeds, site.stream);
+	server.get("/soundcloud/tracks/:id/info", isLoggeds, site.songinfo);
+	server.get("/soundcloud/player", validWebAudioAPI, isLoggeds, site.player);
+	server.get("/soundcloud/favorites", validWebAudioAPI, isLoggeds, site.favorites);
 	server.get("/soundcloud/waveform", site.waveform);
 	server.get("/github",isLoggedg, site.github);
 	server.get("/github/login", passport.authenticate('github',{successRedirect:"/github",failureRedirect:"/"}));
