@@ -22,8 +22,25 @@ var getQueryStrings = function() {
 
 var querystrings = getQueryStrings();
 var songtemplate;
+var audioctx,analyser,scriptprocessor,buffersource;
 
-var drawPlayer = function(el) {
+var audioevents = {
+	onplay: function() {
+		sound.status = "play";
+	},
+	onpause: function() {
+		sound.status = "pause";
+	},
+	onfinish: function() {
+		sound.status = "stop";
+	},
+	onresume: function() {
+		sound.status = "play";
+	}
+};
+
+var drawPlayer = function() {
+	var el = song.el;
 	var canvasctx = el[0].getContext("2d");
 	var outercircleradius,innercircleradius;
 
@@ -38,6 +55,8 @@ var drawPlayer = function(el) {
 
 	x0 = canvasctx.canvas.width/2;
 	y0 = canvasctx.canvas.height/2;
+
+	canvasctx.clearRect(0,0,canvasctx.canvas.width,canvasctx.canvas.height);
 
 	canvasctx.beginPath();
 	canvasctx.fillStyle = "#444";
@@ -59,23 +78,54 @@ var drawPlayer = function(el) {
 	canvasctx.closePath();
 };
 
+var msToTimeFormat = function(miliseconds) {
+	sec = Math.floor(Number(miliseconds)/1000);
+	hrs = Math.floor(sec/3600);
+	min = Math.floor((sec - (hrs*3600))/60);
+	sec = sec - (min*60) - (hrs*3600);
+	return (hrs > 0 ? (hrs < 10 ? "0"+hrs:hrs)+":":"")+(min === 0 ? "00:":(min < 10 ? "0"+min:min)+":")+(sec === 0 ? "00:":(sec < 10 ? "0"+sec:sec));
+};
+
 var songNoExist = function(err, xhr, message) {
 	console.log(message);
 };
 
 var songExist = function(data) {
 	window.song = data;
-	var hrs,min,sec;
+	var id = querystrings.listen;
+	var url = location.host+"/soundcloud/tracks/"+id;
+	var uid = (url+"-T"+Math.random()).replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "");
+	song.uid = uid;
+	song.status = "stop";
+	
 	var templatedata = {};
 	templatedata.title = data.title;
-	sec = Math.floor(Number(data.duration)/1000);
-	hrs = Math.floor(sec/3600);
-	min = Math.floor((sec - (hrs*3600))/60);
-	sec = sec - (min*60) - (hrs*3600);
-	templatedata.totaltime = (hrs > 0 ? (hrs < 10 ? "0"+hrs:hrs)+":":"")+(min === 0 ? "00:":(min < 10 ? "0"+min:min)+":")+(sec === 0 ? "00:":(sec < 10 ? "0"+sec:sec));
-	templatedata.currenttime = (hrs > 0 ? "00:":"")+"00:00";
+	templatedata.totaltime = msToTimeFormat(data.duration);
+	templatedata.currenttime = (templatedata.totaltime.split(":").length > 2 ? "00:":"")+"00:00";
 	$("#js-soundcloud__player").html(songtemplate(templatedata));
-	drawPlayer($("#js-soundcloud__player__canvas"));
+	
+	song.el = $("#js-soundcloud__player__canvas");
+
+	var opt = audioevents;
+	opt.id = uid;
+	opt.url = url;
+
+	soundManager.createSound(opt);
+
+	audioctx = new AudioContext();
+	scriptprocessor = audioctx.createScriptProcessor(2048,1,1);
+	analyser = audioctx.createAnalyser();
+	buffersource = audioctx.createMediaElementSource(soundManager.getSoundById(song.uid)._a);
+
+	analyser.smoothingTimeConstant = 0.3;
+	analyser.fftSize = 1024;
+
+	buffersource.connect(analyser);
+	analyser.connect(scriptprocessor);
+	scriptprocessor.connect(audioctx.destination);
+	buffersource.connect(audioctx.destination);
+
+	scriptprocessor.onaudioprocess = drawPlayer;
 };
 
 var getSong = function(id) {
