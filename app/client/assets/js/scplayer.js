@@ -26,16 +26,20 @@ var audioctx,analyser,scriptprocessor,buffersource;
 
 var audioevents = {
 	onplay: function() {
-		sound.status = "play";
+		song.status = "play";
 	},
 	onpause: function() {
-		sound.status = "pause";
+		song.status = "pause";
 	},
 	onfinish: function() {
-		sound.status = "stop";
+		song.status = "stop";
 	},
 	onresume: function() {
-		sound.status = "play";
+		song.status = "play";
+	},
+	whileplaying: function() {
+		var timeformat = msToTimeFormat(Math.floor(this.position));
+		$("#js-soundcloud__player__currenttime").html(timeformat);
 	}
 };
 
@@ -83,7 +87,7 @@ var msToTimeFormat = function(miliseconds) {
 	hrs = Math.floor(sec/3600);
 	min = Math.floor((sec - (hrs*3600))/60);
 	sec = sec - (min*60) - (hrs*3600);
-	return (hrs > 0 ? (hrs < 10 ? "0"+hrs:hrs)+":":"")+(min === 0 ? "00:":(min < 10 ? "0"+min:min)+":")+(sec === 0 ? "00:":(sec < 10 ? "0"+sec:sec));
+	return (hrs > 0 ? (hrs < 10 ? "0"+hrs:hrs)+":":"")+(min === 0 ? "00:":(min < 10 ? "0"+min:min)+":")+(sec === 0 ? "00":(sec < 10 ? "0"+sec:sec));
 };
 
 var songNoExist = function(err, xhr, message) {
@@ -93,7 +97,7 @@ var songNoExist = function(err, xhr, message) {
 var songExist = function(data) {
 	window.song = data;
 	var id = querystrings.listen;
-	var url = location.host+"/soundcloud/tracks/"+id;
+	var url = location.protocol+"//"+location.host+"/soundcloud/tracks/"+id;
 	var uid = (url+"-T"+Math.random()).replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "");
 	song.uid = uid;
 	song.status = "stop";
