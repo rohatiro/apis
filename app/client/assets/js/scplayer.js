@@ -65,21 +65,23 @@ var scaleArray = function(omax,omin,nmax,nmin,array) {
 };
 
 var drawFrequencyBars = function(context,x0,y0,radius,value,frecbarrs,frecbarrslenght) {
-	var x1,x2,x3,y1,y2,y3;
+	var x1,x2,x3,y1,y2,y3,rad;
 
-	x1 = x0 + (radius*(Math.cos(((2*Math.PI)*frecbarrs)/frecbarrslenght)));
-	y1 = y0 + (radius*(Math.sin(((2*Math.PI)*frecbarrs)/frecbarrslenght)));
+	rad = (((2*Math.PI)*frecbarrs)/frecbarrslenght) - (Math.PI / 2);
+
+	x1 = x0 + (radius*(Math.cos(rad)));
+	y1 = y0 + (radius*(Math.sin(rad)));
 	
-	x2 = x1 + (value*(Math.cos(((2*Math.PI)*frecbarrs)/frecbarrslenght)));
-	y2 = y1 + (value*(Math.sin(((2*Math.PI)*frecbarrs)/frecbarrslenght)));
+	x2 = x1 + (value*(Math.cos(rad)));
+	y2 = y1 + (value*(Math.sin(rad)));
 	
-	x3 = x1 + (radius*(Math.cos(((2*Math.PI)*frecbarrs)/frecbarrslenght)));
-	y3 = y1 + (radius*(Math.sin(((2*Math.PI)*frecbarrs)/frecbarrslenght)));
+	x3 = x1 + (radius*(Math.cos(rad)));
+	y3 = y1 + (radius*(Math.sin(rad)));
 	
 	var lineGrad = context.createLinearGradient(x1,y1,x3,y3);
-	lineGrad.addColorStop(0,"#0f0");
-	lineGrad.addColorStop(0.5,"#ff0");
-	lineGrad.addColorStop(1,"#f00");
+	lineGrad.addColorStop(0,"#0AA2CF");
+	lineGrad.addColorStop(0.5,"#0A82AF");
+	lineGrad.addColorStop(1,"#0A628F");
 
 	context.beginPath();
 	context.moveTo(x1,y1);
@@ -214,15 +216,28 @@ var songExist = function(data) {
 	buffersource.connect(audioctx.destination);
 
 	scriptprocessor.onaudioprocess = drawPlayer;
+
+	soundManager.getSoundById(song.uid).play();
 };
 
 var getSong = function(id) {
 	$.getJSON("/soundcloud/tracks/"+id+"/info").then(songExist,songNoExist);
 };
 
+var onClickPlayer = function() {
+	if(song.status == "play") {
+		song.status = "pause";
+		soundManager.getSoundById(song.uid).pause();
+	} else {
+		song.status = "play";
+		soundManager.getSoundById(song.uid).play();
+	}
+};
+
 if(querystrings.listen) {
 	songtemplate = swig.compile($("#player").html());
 	getSong(querystrings.listen);
+	$("#js-soundcloud__player").on("click","#js-soundcloud__player__canvas",onClickPlayer);
 } else {
 	songtemplate = swig.compile($("#nosong").html());
 	$("#js-soundcloud__player").html(songtemplate());
